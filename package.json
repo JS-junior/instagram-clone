@@ -1,5 +1,5 @@
 {
-  "name": "tik-tok",
+  "name": "whatsapp-clone",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JS-junior/tik-tok.git"
+    "url": "git+https://github.com/JS-junior/whatsapp-clone.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/JS-junior/tik-tok/issues"
+    "url": "https://github.com/JS-junior/whatsapp-clone/issues"
   },
-  "homepage": "https://github.com/JS-junior/tik-tok#readme",
+  "homepage": "https://github.com/JS-junior/whatsapp-clone#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
