@@ -21,7 +21,7 @@ mongoose.connect(`mongodb+srv://hitartha:H6pnk72QnpWR8zqj@cluster0.2vlug.mongodb
 .catch((err)=>{ console.log("failed to connect db" + err) })
 
 app.get('/test',(req,res)=>{
-	res.send('successfully hosted whatsapp clone')
+	res.json({ message: 'successfully hosted whatsapp clone'})
 })
 
 module.exports = app
