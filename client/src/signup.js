@@ -5,56 +5,67 @@ import ReactTypingEffect from 'react-typing-effect';
 import FacebookIcon from '@material-ui/icons/Facebook'
 import EmailIcon from '@material-ui/icons/Email';
 import AwesomeSlider from 'react-awesome-slider';
-import 'react-awesome-slider/dist/styles.css';
-import 'react-awesome-slider/dist/custom-animations/cube-animation.css';
-
+import './App.css'
 
 function Signup(){
 
 	const history = useHistory()
+	const [ username, setUsername ] = useState("")
+	const [ email, setEmail ] = useState("")
+	const [ phone_number, setPhone_number ] = useState("")
+	const [ password, setPassword ] = useState("")
 
-        const SignupWithEmail = ()=>{
+	return (
+		<>
+		<center>
+		<Typography variant='subtitle3'> India </Typography> <br />
+		<img 
+src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token=076d4f57-316e-4bf8-a072-31c0db80cf8b'
+style={{ height: 'auto', width: '50%' }}
+		/>
 
-	}
-
-	const SignupWithGoogle = ()=>{
-		window.location.href = 'http://localhost:8080/'
-	}
-
-	const SignupWithFacebook = ()=>{
-		window.location.href = 'http://localhost:8080/facebook'
-	}
-
-
-        return(
-                <>
+		<input 
+		className='search_input'
+		placeholder='username'
+		value={username} 
+		onChange={ (e)=>{ setUsername(e.target.value) }} />
 		
-		<AwesomeSlider animation='cubeAnimation'>
-<div data-src='https://firebasestorage.googleapis.com/v0/b/what-sapp-clone-f427e.appspot.com/o/images%20(2).jpeg?alt=media&token=78e89991-41d3-442e-a83d-19321c479416'></div>
- <div data-src='https://firebasestorage.googleapis.com/v0/b/what-sapp-clone-f427e.appspot.com/o/images.jpeg?alt=media&token=ff54d990-8cc6-4200-ab80-4d446a0d3430'></div>
-<div data-src='https://firebasestorage.googleapis.com/v0/b/what-sapp-clone-f427e.appspot.com/o/images.png?alt=media&token=1d9692f0-5c6d-4e48-b441-e39e4b4d6217'></div>
-<div data-src='https://firebasestorage.googleapis.com/v0/b/what-sapp-clone-f427e.appspot.com/o/images%20(1).jpeg?alt=media&token=aecefcb1-4933-4879-ad0a-9abf2a612562'></div>
-		  </AwesomeSlider>
-		<br /> <br /> <br />
-		<Button style={{ textAlign: 'center'}} > create an account </Button>
-	<br />	<Button
-style={{ color: 'red', border: 'solid 1px black',width:'100%', borderRadius: '5vh 5vh 5vh 5vh'}}
-                onClick={SignupWithEmail}><EmailIcon />  signup with Email</Button>
-		<br/><br />
-		<Button 
-style={{ color: 'black', border: 'solid 1px black', width: '100%',borderRadius: '5vh 5vh 5vh 5vh' }}
-		onClick={SignupWithGoogle}> signup with Google</Button>
-		<br /><br />
-		<Button 
-style={{ color: 'blue', border: 'solid 1px black', width: '100%', borderRadius: '5vh 5vh 5vh 5vh'}}
-		onClick={SignupWithFacebook}
-		><FacebookIcon style={{ color: 'blue' }} /> 
-		signup with Facebook</Button>
-		<br /><br />
-<Button style={{ textAlign: 'center'}}
-onClick={()=>{ history.push('/login') }}> Already have an account? sign in </Button>
+		<input 
+		className='search_input'
+		placeholder='email'
+		value={email} 
+		onChange={ (e)=>{ setEmail(e.target.value) }} />
 
-	
+		<input 
+		className='search_input' 
+		placeholder='password'
+		value={password} 
+		onChange={ (e)=>{ setPassword(e.target.value) }} />
+
+		<input 
+		placeholder='phone number'
+		className='search_input'
+		value={phone_number} 
+		onChange={ (e)=>{ setPhone_number(e.target.value) }} />
+
+		<br />
+
+		<Button variant='contained'
+		className='signup_button'> signup </Button>
+		<br />
+		<Button className='login_btn'
+		onClick={()=>{ history.push('/login') }}> 
+		Already have an account? sign in </Button>
+		<br />
+		<Typography 
+		className='term_text'
+		variant='subtitle6'>
+		By signing up you are agreeing to Terms and conditions
+		<br />
+		<Typography variant='h6'>Instagram from Facebook
+		</Typography>
+		</Typography>
+		</center>
                 </>
         )
 }

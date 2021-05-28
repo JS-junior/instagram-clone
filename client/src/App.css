@@ -1,38 +1,117 @@
-.App {
-  text-align: center;
+.insta_logo_png {
+	height: auto;
+	width: 30%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.navbar_container{
+	position: fixed;
+	bottom: 1%;
+	left: 0%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding-top: 1vh;
+	border-top: solid 1px black;
+	background-color: white;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.navbar_icons {
+	display: inline-block;
+	margin: 0vh 3.5vh 0vh 3.5vh;
+}
+.messenger_icon {
+	display: inline-block;
+	position: fixed;
+	top: 2%;
+	right: 4%;
+
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.appbar_home {
+	display: inline-block;
+
 }
 
-.App-link {
-  color: #61dafb;
+.navbar_avatar {
+	font-size: 5%;
+	margin: 0vh 0vh 0vh 3.5vh
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.appbar_home_create_icon {
+	display: inline-block;
+	position: fixed;
+	top: 2%;
+	left: 4%;
 }
+
+
+.search_input {
+	padding: 0.5vh 3vh 3vh 0.5vh;
+	width: 70%;
+	height: 0.5vh;
+	background-color: #dbdbdb;
+	margin: 2vh 2vh 1vh 2vh;
+	border-radius: 0.5vh 0.5vh 0.5vh 0.5vh;
+	border: solid 1px white;
+
+}
+
+input:focus  {
+	outline-width: 0;
+}
+
+.appbar_profile_info {
+	margin: 0vh 0vh 0vh 19vh;
+}
+
+.appbar_profile_head {
+	display: inline-block;
+}
+
+#following_text {
+	margin: 0vh 0vh 0vh 6vh;
+}
+
+#follower_text {
+	margin: 0vh 0vh 0vh 2vh
+}
+
+.settings_icon {
+	position: fixed;
+	top: 2%;
+	right: 4%;
+}
+
+.login_btn {
+	text-align: center;
+	position: fixed;
+	bottom: 70%;
+}
+
+.signup_button {
+	background-color: blue;
+}
+
+.notification_bar {
+	display: flex;
+	margin: 1vh 0vh 1vh 0vh;
+}
+
+#notification_avatar {
+	margin-right: 1vh;
+}
+
+#notification_text {
+	margin-right: 1vh;
+}
+
+.notification_text {
+	display: inline-block;
+}
+
+.term_text {
+	position: fixed;
+	bottom: 5%;
+	left: 4%;
+}
+

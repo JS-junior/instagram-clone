@@ -1,17 +1,19 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext, useReducer } from 'react'
 
 const State = createContext()
 
-function StateProvider({ children}){
-	return(
+function StateProvider({ children }){
+
+	return (
 		<>
-		<State.Provider value={'tik-tok-clone'}>
+		<State.Provider value={'hi'}>
 		{children}
 		</State.Provider>
 		</>
 	)
+
 }
 
-
-export default StateProvider
+export { StateProvider, State } 
 export const useStateValue = ()=> useContext(State) 
+

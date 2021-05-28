@@ -6,13 +6,14 @@ const cors = require('cors')
 const morgan = require('morgan')
 const users = require('./users.js')
 const posts = require('./posts.js')
+const server = require('http').createServer(app)
 
 app.use(bp.urlencoded({ extended: false }))
 app.use(bp.json())
 app.use(cors())
 app.use(morgan('dev'))
-app.use(users)
-app.use(posts)
+//app.use(users)
+//app.use(posts)
 mongoose.connect(`mongodb+srv://hitartha:H6pnk72QnpWR8zqj@cluster0.2vlug.mongodb.net/data?retryWrites=true&w=majority`,{
 	useNewUrlPaser: true,
 	useUnifiedTopology: true
@@ -24,4 +25,10 @@ app.get('/test',(req,res)=>{
 	res.json({ message: 'successfully hosted whatsapp clone'})
 })
 
-module.exports = app
+
+
+app.use(cors());
+
+
+server.listen(8080)
+//module.exports = app
