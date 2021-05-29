@@ -14,7 +14,7 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(users)
 app.use(posts)
-app.use(express.static('uploads'))
+app.use(express.static('./uploads'))
 mongoose.connect(`mongodb+srv://hitartha:H6pnk72QnpWR8zqj@cluster0.2vlug.mongodb.net/data?retryWrites=true&w=majority`,{
 	useNewUrlPaser: true,
 	useUnifiedTopology: true

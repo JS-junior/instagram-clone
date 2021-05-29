@@ -15,8 +15,6 @@ function Login(){
 	const [ phone_number, setPhone_number ] = useState("")
         const [ password, setPassword ] = useState("")
 	const [{ base_url }, dispatch ] = useContext(State)
-	const notify = () => toast("Wow so easy!");
-
 
 	const login = ()=>{
 
@@ -33,9 +31,10 @@ function Login(){
 		})
 		.then(data =>{
 			if(data.message === 'no account found'){
-				notify()
+			toast.error('Invalid credentials')
 			} else {
 			console.log(data)
+			toast.success('login successful')
 			localStorage.setItem('jwt', data.message)
 			history.push('/')
 			}

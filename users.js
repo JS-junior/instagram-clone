@@ -104,19 +104,7 @@ router.post('/login',(req,res,next)=>{
 router.get('/user/:id',auth,(req,res,next)=>{
 	User.findOne({ _id: req.params.id  })
 	.then(user =>{
-		/*
-		const result = user.map(doc =>{
-			return {
-				_id: doc._id,
-				username: doc.username,
-				email: doc.email,
-				phone_number: doc.phone_number,
-				photo: doc.photo,
-				followers: doc.followers,
-				followings: doc.followings,
-			}
-		})*/
-			res.status(200).json({ message: user  })
+		res.status(200).json({ message: user  })
 	})
 	.catch(err =>{
 		res.status(500).json({ message: 'server error' })
@@ -124,5 +112,100 @@ router.get('/user/:id',auth,(req,res,next)=>{
 	})
 })
 
+
+router.post('/search/:email',auth,(req,res,next)=>{
+	let userPattern = new RegExp("^" + req.body.email)
+    User.find({email:{$regex:userPattern}})
+    .select("_id email photo username")
+    .then(user=>{
+        res.json({ message: user })
+    }).catch(err=>{
+        console.log(err)
+    })
+})
+
+
+router.put('/follow',auth,(req,res,next)=>{
+	User.findByIdAndUpdate(req.body.id,{
+        $push:{followers:req.user._id}
+	}, { new: true })
+	.then(result =>{
+		User.findByIdAndUpdate(req.user._id,{
+          $push:{following:req.body.id}
+      },{new:true})
+		.then(rsp =>{
+			res.status(200).json({ message: 'follow successful' })
+		})
+		.catch(err =>{
+			res.status(500).json({ message: 'server error' })
+		})
+	})
+	.catch(err =>{
+		res.status(500).json({ message: 'server error'})
+	})
+})
+
+
+router.put('/umfollow',auth,(req,res,next)=>{
+	User.findByIdAndUpdate(req.body.id,{
+        $pull:{followers:req.user._id}
+        }, { new: true })
+        .then(result =>{
+                User.findByIdAndUpdate(req.user._id,{
+          $pull:{following:req.body.id}
+      },{new:true})
+                .then(rsp =>{
+                        res.status(200).json({ message: 'unfollow successful' })
+                })
+                .catch(err =>{
+                        res.status(500).json({ message: 'server error' })
+                })
+        })
+        .catch(err =>{
+                res.status(500).json({ message: 'server error'})
+        })
+})
+
+
+router.put('/updatepic',auth,upload.single('photo'),(req,res,next)=>{
+    User.findByIdAndUpdate(req.user._id,{$set:{photo:req.file.filename}},{new:true},
+        (err,result)=>{
+         if(err){
+             return res.status(422).json({ message: "server error" })
+         }
+         res.status(200).json({ message: 'photo updated' })
+    })
+})
+
+
+router.put('/updatename',auth,(req,res,next)=>{
+    User.findByIdAndUpdate(req.user._id,{$set:{username: req.body.username}},{new:true},
+        (err,result)=>{
+         if(err){
+             return res.status(422).json({ message: "server error" })
+         }
+         res.status(200).json({ message: 'username updated' })
+    })
+})
+
+router.put('/updatemail',auth,(req,res,next)=>{
+    User.findByIdAndUpdate(req.user._id,{$set:{email: req.body.email}},{new:true},
+        (err,result)=>{
+         if(err){
+             return res.status(422).json({ message: "server error" })
+         }
+         res.status(200).json({ message: 'email updated' })
+    })
+})
+
+router.put('/updatenumber',auth,(req,res,next)=>{
+    User.findByIdAndUpdate(req.user._id,{$set:{phone_number: req.body.phone_number}},{new:true},
+        (err,result)=>{
+         if(err){
+             return res.status(422).json({ message: "server error" })
+         }
+         res.status(200).json({ message: 'phone_number updated' })
+    })
+})
 
 module.exports = router 
