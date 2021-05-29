@@ -9,6 +9,15 @@ function Search(){
 	const history = useHistory()
 	const [ query, setQuery ] = useState("")
 
+	useEffect(()=>{
+                const token = localStorage.getItem('jwt');
+		if(!token){
+                        history.push('/login')
+                } else {
+                        console.log('user accepted')
+                }
+        },[])
+
         return(
                 <>
 	<Components />

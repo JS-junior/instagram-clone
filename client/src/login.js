@@ -1,7 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Avatar, Button, Input, Typography } from '@material-ui/core'
 import { useParams, useHistory } from 'react-router-dom'
 import './App.css'
+import { State } from './state.js'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+  
 
 function Login(){
 
@@ -10,6 +14,36 @@ function Login(){
 	const [ email, setEmail ] = useState("")
 	const [ phone_number, setPhone_number ] = useState("")
         const [ password, setPassword ] = useState("")
+	const [{ base_url }, dispatch ] = useContext(State)
+	const notify = () => toast("Wow so easy!");
+
+
+	const login = ()=>{
+
+		fetch(`${base_url}/login`,{
+			method: 'POST',
+			headers: {
+				'Content-Type':'application/json'
+			},
+			body: JSON.stringify({ email: email, password: password })
+		})
+		.then(res =>{
+			return res.json()
+
+		})
+		.then(data =>{
+			if(data.message === 'no account found'){
+				notify()
+			} else {
+			console.log(data)
+			localStorage.setItem('jwt', data.message)
+			history.push('/')
+			}
+		})
+		.catch(err =>{
+			console.log(err)
+		})
+	}
         
         return(
                 <>
@@ -21,6 +55,8 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 style={{ height: 'auto', width: '50%' }}
                 />
 
+        <ToastContainer />
+      
                 <input
                 className='search_input'
                 placeholder='username'
@@ -46,7 +82,7 @@ style={{ height: 'auto', width: '50%' }}
                 onChange={ (e)=>{ setPhone_number(e.target.value) }} />
 
                 <br />
-                                                                                                        <Button variant='contained'
+                                                                                                        <Button variant='contained' onClick={login}
                 className='signup_button'> login  </Button>
                 <br />
                 <Button className='login_btn'

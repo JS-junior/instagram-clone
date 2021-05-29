@@ -1,4 +1,7 @@
 /node_modules
 /package-lock.json
+/env
+/gitignore
+
 /client/node_modules
 /client/package-lock.json

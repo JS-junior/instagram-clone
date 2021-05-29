@@ -11,6 +11,8 @@ import Signup from './signup.js'
 import Login from './login.js'
 import Notify from './notify.js'
 import Error from './error.js'
+import Story from './story.js'
+import Comments from './comments.js'
 
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
 	  <Route path='/signup' component={Signup} />
 	  <Route path='/login' component={Login} />
 	  <Route path='/notifications' component={Notify} />
+	  <Route path='/comments/:id' component={Comments} />
+	  <Route path='/story/:id' component={Story} />
 	  <Route component={Error} />
 	  </Switch>
 </BrowserRouter>

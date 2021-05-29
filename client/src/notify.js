@@ -6,7 +6,16 @@ import Components from './components.js'
 
 function Notify (){
 
+	const history = useHistory()
 
+	useEffect(()=>{
+                const token = localStorage.getItem('jwt');
+		if(!token){
+                        history.push('/login')
+                } else {
+                        console.log('user accepted')
+                }
+        },[])
 
         return(
                 <>

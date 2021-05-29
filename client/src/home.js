@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Avatar, Button, Input, Card, CardMedia, CardContent, CardHeader, CardActionArea,  AppBar, Toolbar, Typography, IconButton, Tooltip } from '@material-ui/core'
 import Menu from '@material-ui/icons/Menu'
 import Search from '@material-ui/icons/Search'
@@ -10,17 +10,30 @@ import ChatRoundedIcon from '@material-ui/icons/ChatRounded'
 import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import Components from './components.js'
-
+import { State } from './state.js'
 
 function Home(){
 
- 
+	const [{ base_url }, dispatch ] = useContext(State)
+	const history = useHistory()
+
+	useEffect(()=>{
+		const token = localStorage.getItem('jwt')
+		if(!token){
+			history.push('/login')
+		} else {
+			console.log('user accepted')
+		}
+	},[])
+
 	return(
 		<>
 		<Components />
 
 		<div className='appbar_home'>
-		<AddBoxIcon className='appbar_home_create_icon' />
+		<AddBoxIcon 
+		onClick={ ()=>{ history.push('/create')  }} 
+		className='appbar_home_create_icon' />
 		<center>
 		<img 
 src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token=076d4f57-316e-4bf8-a072-31c0db80cf8b'  
