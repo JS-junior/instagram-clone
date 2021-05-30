@@ -13,7 +13,9 @@ import { actionTypes } from './reducer.js'
 import jwt_decode from 'jwt-decode'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Heart from "react-animated-heart";
 import FavoriteIcon from '@material-ui/icons/Favorite';
+
 
 function Profile(){
 
@@ -26,6 +28,7 @@ function Profile(){
 	const token = localStorage.getItem('jwt')
 	const user_id = jwt_decode(token)
 	const openModal = ()=> setOpen(true)
+	const [ isClick, setClick ] = useState(false)
 	const closeModal = ()=> setOpen(false)
 	const logout = ()=>{ localStorage.removeItem('jwt'); history.push('/signup') }
 
@@ -156,10 +159,12 @@ function Profile(){
 
 
 		<div className='appbar_profile'>
-		<Typography variant='h6'> {user.username} </Typography>
-		<Avatar src={`${base_url}/${user.photo}`} />
+		<Typography onClick={ ()=>{ history.push(`/story/${user_id._id}`) }}
+		variant='h6'> {user.username} </Typography>
+		<Avatar
+		src={`${base_url}/${user.photo}`} />
 		<div className='appbar_profile_info'>
-		<Typography
+		<Typography 
                 className='appbar_profile_head'      
 		id='follower_text'
 		variant='h6'>  </Typography>
@@ -200,8 +205,7 @@ function Profile(){
                 <CardHeader
                 title={<Typography variant='h6'> {val.postedBy.username} </Typography>}
                 avatar={<Avatar src={`${base_url}/${val.postedBy.photo}`}/>}
-                subheader={`posted on ${val.postedOn}`}
-                />
+                subheader={`posted on ${val.postedOn}`}    />
                 <CardActionArea>
                 <center>                                                                       
 		<CardMedia
@@ -212,6 +216,7 @@ function Profile(){
 		<CardContent><center>                                                                  
 		<Typography variant='subtitle1'>{val.caption}</Typography>
 		<br /></center>
+
 		{val.likes.includes(user_id) ?  <FavoriteIcon
 		onClick={ ()=>{ unlikePost(val._id) }}
 		className='navbar_icons'  />

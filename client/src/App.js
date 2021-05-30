@@ -13,6 +13,7 @@ import Notify from './notify.js'
 import Error from './error.js'
 import Story from './story.js'
 import Edit from './edit.js'
+import CreateStory from './createstory.js'
 import Comments from './comments.js'
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
 	  <Route path='/notifications' component={Notify} />
 	  <Route path='/comments/:id' component={Comments} />
 	  <Route path='/story/:id' component={Story} />
+	  <Route path='/createstory' component={CreateStory} />
 	  <Route path='/edit/:id' component={Edit} />
 	  <Route component={Error} />
 	  </Switch>

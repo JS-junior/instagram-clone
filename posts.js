@@ -5,6 +5,7 @@ const multer = require('multer')
 const Post = require('./post.js')
 const auth = require('./auth.js')
 const path = require('path')
+const Story = require('./story.js')
 
 const storage = multer.diskStorage({
         destination: (req,file,cb)=>{
@@ -28,6 +29,19 @@ router.get('/posts/:id',auth,(req,res,next)=>{
 	.catch(err =>{
 		res.status(500).json({ message: 'server error' })
 	})
+})
+
+router.get('/subpost',auth,(req,res,next)=>{
+Post.find({postedBy:{$in:req.user.followings}})
+    .populate("postedBy","_id username photo")
+    .populate("comments.postedBy","_id username photo")
+    .sort('postedOn')
+    .then(posts=>{
+        res.status(200).json({ message: posts })
+    })
+    .catch(err=>{
+        console.log(err)
+    })
 })
 
 router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
@@ -101,5 +115,38 @@ router.put('/comment',auth,(req,res,next)=>{
 	})
 })
 
+router.get('/story/:id',auth,(req,res,next)=>{
+	Story.find({ postedBy: req.user._id })
+	.populate('postedBy', 'username _id photo')
+	.then(result =>{
+		res.status(200).json({ message: result })
+	})
+	.catch(err =>{
+		res.status(500).json({ message: 'server error'})
+	})
+})
+
+router.post('/story',auth,upload.single('photo'),(req,res,next)=>{
+
+	console.log(req.file)
+
+	const model = new Story({
+		_id: new mongoose.Types.ObjectId(),
+		url: 'http://localhost:8080/' + req.file.filename,
+		postedBy: req.user._id,
+		postedOn: new Date(),
+		type: req.file.mimetype,
+		heading: req.user.username,
+		profileImage: 'http://localhost:8080/' + req.user.photo
+	})
+
+	model.save()
+	.then(result =>{
+		res.status(200).json({ message: 'story created successfully' })
+	})
+	.catch(err =>{
+		res.status(500).json({ message: 'server error'})
+	})
+})
 
 module.exports = router

@@ -11,10 +11,14 @@ import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import Components from './components.js'
 import { State } from './state.js'
+import jwt_decode from 'jwt-decode'
 
 function Home(){
 
 	const [{ base_url }, dispatch ] = useContext(State)
+	const [ posts, setPosts ] = useState([])
+	const token = localStorage.getItem('jwt')
+	const user_id = jwt_decode(token)
 	const history = useHistory()
 
 	useEffect(()=>{
@@ -22,7 +26,20 @@ function Home(){
 		if(!token){
 			history.push('/login')
 		} else {
-			console.log('user accepted')
+			fetch(`${base_url}/subpost`,{
+				method: 'GET',
+				headers: { authorization: 'bearer ' + token }
+			})
+			.then(res =>{
+				return res.json()
+			})
+			.then(data =>{
+				setPosts(data.message)
+				console.log(data.message)
+			})
+			.catch(err =>{
+				console.log(err)
+			})
 		}
 	},[])
 
@@ -32,7 +49,7 @@ function Home(){
 
 		<div className='appbar_home'>
 		<AddBoxIcon 
-		onClick={ ()=>{ history.push('/create')  }} 
+		onClick={ ()=>{ history.push('/createstory')  }} 
 		className='appbar_home_create_icon' />
 		<center>
 		<img 
@@ -42,25 +59,25 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 	<ForumRoundedIcon className='messenger_icon' />
 		</div>
 		
-
-
-
+		{posts.map((val, index)=>{
+			return(
+				<>
 		<Card>
 		<CardHeader 
-		title={<Typography variant='h6'> Instagram Clone </Typography>}
-		avatar={<Avatar src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token=076d4f57-316e-4bf8-a072-31c0db80cf8b' />}
-		subheader='posted on 28 june 2021'
+		title={<Typography variant='h6'> {val.postedBy.username} </Typography>}
+		avatar={<Avatar src={`${base_url}/${val.postedBy.photo}`} />}
+		subheader={`posted on ${val.postedOn}`}
 		/>
 		<CardActionArea>
 		<center>
 		<CardMedia 
-		image='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token=076d4f57-316e-4bf8-a072-31c0db80cf8b'
+		image={`${base_url}/${val.photo}`}
 		component='img'
 		style={{ height: 'auto', width: '50%' }} 
 		/></center>
 		<CardContent><center>
 		<Typography variant='subtitle1'>
-		Building instagram clone, wish me
+			{val.caption}
 		</Typography><br /></center>
 		<FavoriteBorderIcon className='navbar_icons'  />
 		<ChatRoundedIcon className='navbar_icons' />
@@ -68,6 +85,10 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 		</CardContent>
 		</CardActionArea>
 		</Card>
+		</>
+	)
+		})}
+
 		</>
 	)
 }

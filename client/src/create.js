@@ -56,6 +56,7 @@ function Create(){
 		})
 		.catch(err =>{
 			console.log(err)
+			toast.error('error occured')
 		})
 		}
 	useEffect(()=>{
