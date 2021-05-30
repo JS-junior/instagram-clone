@@ -14,6 +14,9 @@ import Error from './error.js'
 import Story from './story.js'
 import Edit from './edit.js'
 import CreateStory from './createstory.js'
+import Chat from './chat.js'
+import Rooms from './room.js'
+import Verify from './verify.js'
 import Comments from './comments.js'
 
 function App() {
@@ -35,6 +38,9 @@ function App() {
 	  <Route path='/story/:id' component={Story} />
 	  <Route path='/createstory' component={CreateStory} />
 	  <Route path='/edit/:id' component={Edit} />
+	  <Route path='/chat/:id' component={Chat} />
+	  <Route path='/room/:id' component={Rooms} />
+	  <Route path='/verify/:id' component={Verify} />
 	  <Route component={Error} />
 	  </Switch>
 </BrowserRouter>

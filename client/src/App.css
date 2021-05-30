@@ -115,3 +115,24 @@ input:focus  {
 	left: 4%;
 }
 
+
+.inner_modal{
+	position: fixed;
+	top: 35%;
+	left: 50%;
+	height: 40vh;
+	width: 90%;
+	transform: translate(-50%, -50%);
+	background-color: white;
+	z-index: 1000;
+}
+
+.outer_modal{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 1000;
+}

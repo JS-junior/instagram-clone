@@ -31,6 +31,19 @@ router.get('/posts/:id',auth,(req,res,next)=>{
 	})
 })
 
+router.get('/comments/:id',auth,(req,res,next)=>{
+        Post.find({ _id: req.params.id })
+        .populate('postedBy','username _id photo')
+        .populate('comments.postedBy','username _id photo')
+        .then(result =>{
+                res.status(200).json({ message: result })
+        })
+        .catch(err =>{
+                res.status(500).json({ message: 'server error' })
+        })
+})
+
+
 router.get('/subpost',auth,(req,res,next)=>{
 Post.find({postedBy:{$in:req.user.followings}})
     .populate("postedBy","_id username photo")

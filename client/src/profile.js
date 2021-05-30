@@ -226,18 +226,18 @@ function Profile(){
 		}
 
                 <ChatRoundedIcon 
-		onClick={ ()=>{ history.push(`/comments/${val.postedBy._id}`) }}
+		onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
 		className='navbar_icons' />
                 <ShareIcon className='navbar_icons' />
 		<DeleteIcon className='navbar_icons' 
 		onClick={()=>{ deletePost(val._id) }} />
                 </CardContent>
                 </CardActionArea>                                                             
-		</Card>
+		</Card> 
 				</>
 			)
 			})}
-
+		<br /> <br /> <br />
                 </>
         )
 }

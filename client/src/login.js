@@ -5,7 +5,7 @@ import './App.css'
 import { State } from './state.js'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-  
+import Modal from './modal.js'
 
 function Login(){
 
@@ -15,6 +15,7 @@ function Login(){
 	const [ phone_number, setPhone_number ] = useState("")
         const [ password, setPassword ] = useState("")
 	const [{ base_url }, dispatch ] = useContext(State)
+	const [ open, setOpen ] = useState(false)
 
 	const login = ()=>{
 
@@ -55,7 +56,8 @@ style={{ height: 'auto', width: '50%' }}
                 />
 
         <ToastContainer />
-      
+		<Modal open={open} success={ ()=>{ toast.success('check your mail') }}
+		onClose={()=>{ setOpen(false) }} />
                 <input
                 className='search_input'
                 placeholder='username'
@@ -87,7 +89,7 @@ style={{ height: 'auto', width: '50%' }}
                 <Button className='login_btn'
                 onClick={()=>{ history.push('/signup') }}>
                 Don't have an account? sign up 
-		</Button>
+		</Button><Button onClick={()=>{ setOpen(true)}}> forgot password </Button>
                 <br />
                 <Typography variant='h6'>
 		Terms and conditions </Typography>

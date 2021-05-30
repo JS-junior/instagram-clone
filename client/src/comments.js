@@ -19,7 +19,7 @@ function Comments(){
 
 
 	const fetchPost = ()=>{
-		fetch(`${base_url}/posts/${id}`,{
+		fetch(`${base_url}/comments/${id}`,{
 			method: 'GET',
 			headers: { authorization: 'bearer ' + token }
 		})
@@ -35,7 +35,7 @@ function Comments(){
 		})
 	}
 
-	useEffect(()=>{                                                                                         fetchPost()                                                                             },[comments])
+	useEffect(()=>{                                                                                         fetchPost()                                                                             },[])
 
 	const commentPost = ()=>{                                                                             fetch(`${base_url}/comment`,{
                         method: 'PUT',                                                                                  headers: {                                                                                              authorization: 'bearer ' + token,
