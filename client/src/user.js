@@ -19,9 +19,11 @@ function User(){
 	const [ user, setUser ] = useState([])
 	const [ open, setOpen ] = useState(false)
 	const token = localStorage.getItem('jwt')
-	const user_id = jwt_decode(token)
+	const decoded = jwt_decode(token)
 	const [{ base_url }, dispatch ] = useContext(State)
 	const [ posts, setPosts ] = useState([])
+	const [ followers, setFollowers ] = useState([])
+	const [ followings, setFollowings ] = useState([])
         const logout = ()=>{ localStorage.removeItem('jwt'); history.push('/signup') }
 
 	useEffect(()=>{
@@ -29,9 +31,11 @@ function User(){
 
                 if(!token){
                         history.push('/login')
-
-                } else if(token){
-
+		} else {
+			fetchUser()
+                }
+	},[])
+			const fetchUser = ()=>{
                         console.log(token)
                         fetch(`${base_url}/user/${id}`,{
                                 headers: {
@@ -43,12 +47,14 @@ function User(){
                         .then(data =>{
                                 setUser(data.message)
                                 console.log(data.message)
+				setFollowers(data.message.followers)
+				setFollowings(data.message.followings)
                         })
                         .catch(err =>{
                                 console.log(err)
                         })
                 }
-	},[])
+	
 
 
 	const likePost = (uid)=>{
@@ -66,6 +72,7 @@ function User(){
 			if(data.message === 'liked successfully'){
 				console.log(data.message)
 				toast.success(data.message)
+				fetchPost()
 			} else {
 				toast.error('an error occured')
 			}
@@ -91,6 +98,7 @@ function User(){
 			if(data.message === 'unliked successfully'){
 				console.log(data.message)
 				toast.success(data.message)
+				fetchPost()
 			} else {
 				toast.error('server error')
 			}
@@ -113,7 +121,6 @@ function User(){
                 .then(data =>{
                         console.log(data)
                         setPosts(data.message)
-
                 })
                 .catch(err =>{
                         console.log(err)
@@ -133,9 +140,10 @@ function User(){
 			return res.json()
 		})
 		.then(data =>{
-			if(data.message === 'follow sucessfully'){
+			if(data.message === 'follow successfully'){
 				console.log(data.message)
 				toast.success(data.message)
+				fetchUser()
 			} else {
 				toast.error('server error')
 			}
@@ -158,9 +166,11 @@ function User(){
 			return res.json()
 		})
 		.then(data =>{
-			if(data.message === 'unfollow sucessfully'){
+			if(data.message === 'unfollow successfully'){
 				toast.success(data.message)
 				console.log(data.message)
+				fetchUser()
+
 			} else {
 				toast.error('server error')
 			}
@@ -189,11 +199,11 @@ function User(){
                 <div className='appbar_profile_info'>                                                                                                <Typography
                 className='appbar_profile_head'
                 id='follower_text'
-                variant='h6'>  </Typography>
+                variant='h6'> {followers.length}</Typography>
                 <Typography
                 id='following_text'
                 className='appbar_profile_head'
-                variant='h6'> </Typography> <br />
+                variant='h6'>{followings.length}</Typography> <br />
                 <Typography
                 className='appbar_profile_text'
                 variant='subtitle5'> Followers </Typography>
@@ -202,10 +212,10 @@ function User(){
 		variant='subtitle5'> Followings </Typography>
                 </div>                                                                                                                          
 		<Typography variant='h6'> {user.username}</Typography>
-                <Typography variant='subtitle3'> my bio </Typography><br />                                     <center>{/*
-		{user.followers.includes(user_id) ? 
+                <Typography variant='subtitle3'> my bio </Typography><br />                                     <center>
+		{followers.includes(decoded._id) ? 
                 <Button onClick={ ()=>{ unfollow(user._id) }}> unfollow </Button>:
-		<Button onClick={ ()=>{ follow(user._id) }}> follow </Button>}*/}
+		<Button onClick={ ()=>{ follow(user._id) }}> follow </Button>}
 		</center>
                 </div>
 
@@ -228,7 +238,7 @@ function User(){
                 <CardContent><center>
                 <Typography variant='subtitle1'>{val.caption}</Typography>
                 <br /></center>
-		{val.likes.includes(user_id) ? <FavoriteIcon className='navbar_icoms'
+		{val.likes.includes(decoded._id) ? <FavoriteIcon className='navbar_icoms'
 		onClick={()=>{ unlikePost(val._id) }} /> :
                 <FavoriteBorderIcon
                 onClick={ ()=>{ likePost(val._id) }}

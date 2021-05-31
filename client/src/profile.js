@@ -24,6 +24,8 @@ function Profile(){
 	const [ open, setOpen ] = useState(false)
 	const [ user, setUser ] = useState([])
 	const [ posts, setPosts ] = useState([])
+	const [ followers, setFollowers ] = useState([])
+	const [ followings, setFollowings ] = useState([])
 	const [ comment, setComment ] = useState("")
 	const token = localStorage.getItem('jwt')
 	const user_id = jwt_decode(token)
@@ -114,6 +116,8 @@ function Profile(){
 			.then(data =>{
 				setUser(data.message)
 				console.log(data.message)
+				setFollowers(data.message.followers)
+				setFollowings(data.message.followings)
 			})
 			.catch(err =>{
 				console.log(err)
@@ -167,11 +171,11 @@ function Profile(){
 		<Typography 
                 className='appbar_profile_head'      
 		id='follower_text'
-		variant='h6'>  </Typography>
+		variant='h6'> {followers.length} </Typography>
                 <Typography          
 		id='following_text'
-		className='appbar_profile_head'                                                  
-		variant='h6'> </Typography> <br />
+		className='appbar_profile_head'                                                 
+		variant='h6'> {followings.length} </Typography> <br />
 		<Typography
 		className='appbar_profile_text'
 		variant='subtitle5'> Followers </Typography>
@@ -217,7 +221,7 @@ function Profile(){
 		<Typography variant='subtitle1'>{val.caption}</Typography>
 		<br /></center>
 
-		{val.likes.includes(user_id) ?  <FavoriteIcon
+		{val.likes.includes(user_id._id) ?  <FavoriteIcon
 		onClick={ ()=>{ unlikePost(val._id) }}
 		className='navbar_icons'  />
 		: <FavoriteBorderIcon

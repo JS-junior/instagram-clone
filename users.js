@@ -110,6 +110,7 @@ router.post('/login',(req,res,next)=>{
 
 router.get('/user/:id',auth,(req,res,next)=>{
 	User.findOne({ _id: req.params.id  })
+	.select('followers followings username _id photo email')
 	.then(user =>{
 		res.status(200).json({ message: user  })
 	})
@@ -141,7 +142,7 @@ router.put('/follow',auth,(req,res,next)=>{
           $push:{followings :req.body.id}
       },{new:true})
 		.then(rsp =>{
-			res.status(200).json({ message: 'follow successful' })
+			res.status(200).json({ message: 'follow successfully' })
 		})
 		.catch(err =>{
 			res.status(500).json({ message: 'server error' })
@@ -153,7 +154,7 @@ router.put('/follow',auth,(req,res,next)=>{
 })
 
 
-router.put('/umfollow',auth,(req,res,next)=>{
+router.put('/unfollow',auth,(req,res,next)=>{
 	User.findByIdAndUpdate(req.body.id,{
         $pull:{followers:req.user._id}
         }, { new: true })
@@ -162,7 +163,7 @@ router.put('/umfollow',auth,(req,res,next)=>{
           $pull:{followings :req.body.id}
       },{new:true})
                 .then(rsp =>{
-                        res.status(200).json({ message: 'unfollow successful' })
+                        res.status(200).json({ message: 'unfollow successfully' })
                 })
                 .catch(err =>{
                         res.status(500).json({ message: 'server error' })
