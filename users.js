@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const multer = require('multer')
 const path = require('path')
+const nodemailer = require('nodemailer')
 const auth = require('./auth.js')
 const User = require('./user.js')
 
@@ -207,6 +208,66 @@ router.put('/updatenumber',auth,(req,res,next)=>{
          }
          res.status(200).json({ message: 'phone_number updated' })
     })
+})
+
+router.post('/forgotpass',(req,res,next)=>{
+
+	const token = jwt.sign({
+		email: req.body.email 
+	}, process.env.JWT_KEY, { expiresIn: '1hr' })
+
+	const link = `http://localhost:3000/verify/${token}`
+
+	const transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+			user: 'arnabgogoi83@gmail.com',
+			pass:'ArNaBgOgOi83'
+		}
+	})
+
+	const mail = {
+		from: 'arnabgogoi83@gmail.com',
+		to: req.body.email,
+		subject: 'Forgot password',
+		html: `<a href='${link}'> verify </a>`
+	}
+
+	transporter.sendMail(mail, (err, result)=>{
+
+		if(err){
+			res.status(500).json({ message: 'server error' })
+		} else if(result){
+			res.status(200).json({ message: 'check your mail' })
+		}
+
+	})
+})
+
+router.put('/resetpass',(req,res,next)=>{
+
+	const decoded = jwt.verify(req.body.id, process.env.JWT_KEY)
+	
+	User.findOne({ email: decoded.email })
+	.then(result =>{
+
+		bcrypt.hash(req.body.password, 10)
+		.then(hash =>{
+		User.findByIdAndUpdate(result._id, { $set: { password: hash }}, { new: true })
+		.then(data =>{
+			res.status(200).json({ message: 'password updated' })
+		})
+		.catch(err =>{
+			res.status(500).json({ message: 'server error' })
+		})
+		})
+		.catch(err =>{
+			res.status(500).json({ message: 'server error' })
+		})
+	})
+	.catch(err =>{
+		res.status(500).json({ message: 'server error' })
+	})
 })
 
 module.exports = router 

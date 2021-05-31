@@ -27,6 +27,7 @@ function Story(){
 		}
 	]
 
+
 	useEffect(()=>{
 		fetch(`${base_url}/story/${id}`,{
 			method: 'GET',
@@ -37,10 +38,12 @@ function Story(){
 		})
 		.then(data =>{
 			console.log(data)
+			setStories(data.message)
 		
-			setStories(data.message.map(val =>({
+		/*	setStories(data.message.map(val =>({
 				url: val.url
 			})))
+			*/
 
 			console.log(stories)
 		})
@@ -59,7 +62,7 @@ function Story(){
 			height={768}
 		        onAllStoriesEnd={()=>{ history.push('/') }}
 		/>
-		</>                          
+		</>                 
 	)
 }
 export default Story

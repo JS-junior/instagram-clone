@@ -6,6 +6,7 @@ import FacebookIcon from '@material-ui/icons/Facebook'
 import EmailIcon from '@material-ui/icons/Email';
 import AwesomeSlider from 'react-awesome-slider';
 import { State } from './state.js'
+import { toast, ToastContainer } from 'react-toastify'
 import './App.css'
 
 function Signup(){
@@ -45,16 +46,23 @@ function Signup(){
 			return result.json()
 		})
 		.then(data =>{
+			if(data.message === 'account created'){
+			toast.success('account created')
 			console.log(data)
 			history.push('/login')
+			} else {
+				toast.error(data.message)
+			}
 		})
 		.catch(err =>{
 			console.log(err)
+		
 		})
 	}
 
 	return (
 		<>
+		<ToastContainer />
 		<center>
 		<img 
 src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token=076d4f57-316e-4bf8-a072-31c0db80cf8b'
