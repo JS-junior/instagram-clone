@@ -73,24 +73,29 @@ router.post('/login',(req,res,next)=>{
 		res.status(409).json({ message: 'please enter all details'})
 	} else {
 
-	User.find({ email: email })
+	User.findOne({ email: email })
 	.then(user =>{
 		if(user.length < 1){
 			res.status(404).json({ message: 'no account found' })
 		} else { 
-			bcrypt.compare(password, user[0].password)
+			bcrypt.compare(password, user.password)
 			.then(result =>{
+			console.log(result)
+				if(result === true){
 			const token = jwt.sign({ 
-				username: user[0].username,
-				email: user[0].email,
-				photo:  user[0].photo,
-				password: user[0].password,
-				_id: user[0]._id,
-				phone_number: user[0].phone_number,
-				followers: user[0].followers,
-				followings: user[0].followings
+				username: user.username,
+				email: user.email,
+				photo:  user.photo,
+				password: user.password,
+				_id: user._id,
+				phone_number: user.phone_number,
+				followers: user.followers,
+				followings: user.followings
 			}, process.env.JWT_KEY)
 				res.status(200).json({ message: token })
+				} else if(result === false){
+				res.status(404).json({ message: 'invalid credentials' })
+				}
 			})
 			.catch(err =>{
 				res.status(500).json({ message: 'server error'})
@@ -133,7 +138,7 @@ router.put('/follow',auth,(req,res,next)=>{
 	}, { new: true })
 	.then(result =>{
 		User.findByIdAndUpdate(req.user._id,{
-          $push:{following:req.body.id}
+          $push:{followings :req.body.id}
       },{new:true})
 		.then(rsp =>{
 			res.status(200).json({ message: 'follow successful' })
@@ -154,7 +159,7 @@ router.put('/umfollow',auth,(req,res,next)=>{
         }, { new: true })
         .then(result =>{
                 User.findByIdAndUpdate(req.user._id,{
-          $pull:{following:req.body.id}
+          $pull:{followings :req.body.id}
       },{new:true})
                 .then(rsp =>{
                         res.status(200).json({ message: 'unfollow successful' })
@@ -268,6 +273,11 @@ router.put('/resetpass',(req,res,next)=>{
 	.catch(err =>{
 		res.status(500).json({ message: 'server error' })
 	})
+})
+
+router.get('/followings',auth,(req,res,next)=>{
+	User.find()
+
 })
 
 module.exports = router 

@@ -57,6 +57,18 @@ Post.find({postedBy:{$in:req.user.followings}})
     })
 })
 
+router.get('/substory',auth,(req,res,next)=>{
+Story.find({postedBy:{$in:req.user.followings}})
+    .populate("postedBy","_id username photo")
+    .sort('postedOn')
+    .then(stories =>{
+        res.status(200).json({ message: stories })
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+})
+
 router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
 
 	const { caption } = req.body

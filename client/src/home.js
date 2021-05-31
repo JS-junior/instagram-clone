@@ -17,6 +17,7 @@ function Home(){
 
 	const [{ base_url }, dispatch ] = useContext(State)
 	const [ posts, setPosts ] = useState([])
+	const [ stories, setStories ] = useState([])
 	const token = localStorage.getItem('jwt')
 	const user_id = jwt_decode(token)
 	const history = useHistory()
@@ -43,6 +44,29 @@ function Home(){
 		}
 	},[])
 
+	useEffect(()=>{
+                const token = localStorage.getItem('jwt')
+		if(!token){
+			history.push('/login')
+		} else {
+                        fetch(`${base_url}/substory`,{
+				method: 'GET',
+				headers: { authorization: 'bearer ' + token }
+                        })
+                        .then(res =>{
+				return res.json()
+                        })
+				.then(data =>{
+					setStories(data.message)
+                                console.log(data.message)
+                        })
+                        .catch(err =>{
+                                console.log(err)
+                        })
+                }
+        },[])
+
+
 	return(
 		<>
 		<Components />
@@ -57,6 +81,18 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 	className='insta_logo_png' />
 	</center>
 	<ForumRoundedIcon className='messenger_icon' />
+		</div>
+
+		<div className='stories_container'>
+		{stories.map((val,index)=>{
+			return(
+				<>
+		<Avatar className='story_avatar'
+		onClick={()=>{ history.push(`/story/${val.postedBy._id}`) }}
+		src={`${base_url}/${val.postedBy.photo}`} />
+				</>
+			)
+				})}
 		</div>
 		
 		{posts.map((val, index)=>{
@@ -80,7 +116,8 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 			{val.caption}
 		</Typography><br /></center>
 		<FavoriteBorderIcon className='navbar_icons'  />
-		<ChatRoundedIcon className='navbar_icons' />
+		<ChatRoundedIcon onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
+		className='navbar_icons' />
 		<ShareIcon className='navbar_icons' />
 		</CardContent>
 		</CardActionArea>
