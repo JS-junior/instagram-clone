@@ -10,6 +10,9 @@ import ChatRoundedIcon from '@material-ui/icons/ChatRounded'
 import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import Components from './components.js'
+import { toast, ToastContainer } from 'react-toastify'
+import Heart from "react-animated-heart";
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import { State } from './state.js'
 import jwt_decode from 'jwt-decode'
 
@@ -27,6 +30,13 @@ function Home(){
 		if(!token){
 			history.push('/login')
 		} else {
+
+			fetchPost()
+
+		}
+	 },[])
+
+			const fetchPost = ()=>{
 			fetch(`${base_url}/subpost`,{
 				method: 'GET',
 				headers: { authorization: 'bearer ' + token }
@@ -42,7 +52,7 @@ function Home(){
 				console.log(err)
 			})
 		}
-	},[])
+
 
 	useEffect(()=>{
                 const token = localStorage.getItem('jwt')
@@ -66,11 +76,58 @@ function Home(){
                 }
         },[])
 
+	const unlikePost = (id)=>{
+
+                fetch(`${base_url}/unlike`,{
+                        method: 'PUT',
+                        headers: {
+                                authorization: 'bearer ' + token,
+                                'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({ id: id  })
+       })
+                        .then(res =>{
+                        return res.json()
+                })
+                .then(data =>{
+                        if(data.message === 'unliked successfully'){
+                        console.log(data)
+                        toast.success('likwd')
+                        fetchPost()
+                        } else {
+                                toast.error('error occured')
+                        }
+                })
+        }
+
+        const likePost = (id)=>{
+                fetch(`${base_url}/like`,{
+                        method: 'PUT',
+                        headers: {
+                                authorization: 'bearer ' + token,
+                                'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({ id: id })
+      })
+
+                        .then(res =>{
+                        return res.json()
+                })
+                .then(data =>{
+                        if(data.message === 'liked successfully'){
+                        console.log(data)
+                        toast.success(data.message)
+                        fetchPost()
+                        } else {
+                                toast.error('error occured')
+                        }
+                })
+        }
 
 	return(
 		<>
 		<Components />
-
+		<ToastContainer />
 		<div className='appbar_home'>
 		<AddBoxIcon 
 		onClick={ ()=>{ history.push('/createstory')  }} 
@@ -115,7 +172,13 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 		<Typography variant='subtitle1'>
 			{val.caption}
 		</Typography><br /></center>
-		<FavoriteBorderIcon className='navbar_icons'  />
+		{val.likes.includes(user_id._id) ?  <FavoriteIcon
+                onClick={ ()=>{ unlikePost(val._id) }}
+                className='navbar_icons'  />
+                : <FavoriteBorderIcon
+                onClick={ ()=>{ likePost(val._id) }}
+                className='navbar_icons' />
+                }
 		<ChatRoundedIcon onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
 		className='navbar_icons' />
 		<ShareIcon className='navbar_icons' />

@@ -6,6 +6,8 @@ const Post = require('./post.js')
 const auth = require('./auth.js')
 const path = require('path')
 const Story = require('./story.js')
+const User = require('./user.js')
+const Notification = require('./notification.js')
 
 const storage = multer.diskStorage({
         destination: (req,file,cb)=>{
@@ -45,7 +47,10 @@ router.get('/comments/:id',auth,(req,res,next)=>{
 
 
 router.get('/subpost',auth,(req,res,next)=>{
-Post.find({postedBy:{$in:req.user.followings}})
+
+User.findById(req.user._id)
+.then(user =>{
+Post.find({postedBy:{$in: user.followings}})
     .populate("postedBy","_id username photo")
     .populate("comments.postedBy","_id username photo")
     .sort('postedOn')
@@ -56,9 +61,15 @@ Post.find({postedBy:{$in:req.user.followings}})
         console.log(err)
     })
 })
+.catch(err =>{
+	res.status(500).json({ message: 'server error' })
+})
+})
 
 router.get('/substory',auth,(req,res,next)=>{
-Story.find({postedBy:{$in:req.user.followings}})
+User.findById(req.user._id)
+.then(user =>{
+Story.find({postedBy:{$in: user.followings}})
     .populate("postedBy","_id username photo")
     .sort('postedOn')
     .then(stories =>{
@@ -67,6 +78,10 @@ Story.find({postedBy:{$in:req.user.followings}})
     .catch(err=>{
         console.log(err)
     })
+})
+.catch(err =>{
+	res.status(500).json({ message: 'server error' })
+})
 })
 
 router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
@@ -106,7 +121,20 @@ router.delete('/post/:id',auth,(req,res,next)=>{
 router.put('/like',auth,(req,res,next)=>{
 	Post.findByIdAndUpdate(req.body.id, { $push: { likes: req.user._id }}, { new: true })
 	.then(result =>{
+		
+		const model = new Notification({
+			_id: new mongoose.Types.ObjectId(),
+			message: ' liked your post. You can check out his profile.',
+			triggeredBy: req.user._id,
+			triggeredTo: req.body.id
+		})
+		model.save()
+		.then(data =>{
 		res.status(200).json({ message: 'liked successfully' })
+		})
+		.catch(err =>{
+			res.status(500).json({ message: 'server error' })
+		})
 	})
 	.catch(err =>{
 		res.status(500).json({ message: 'server error' })
@@ -133,7 +161,20 @@ router.put('/comment',auth,(req,res,next)=>{
 
 	Post.findByIdAndUpdate(req.body.id, { $push: { comments: comment } }, { new: true })
 	.then(result =>{
-		res.status(200).json({ message: 'comment posted successfully' })
+
+		const model = new Notification({
+                        _id: new mongoose.Types.ObjectId(),
+                        message: ' has commented on your post. You can check out his profile',
+                        triggeredBy: req.user._id,
+                        triggeredTo: req.body.id
+                })
+                model.save()
+                .then(data =>{
+                res.status(200).json({ message: 'comment posted successfully' })
+                })
+                .catch(err =>{
+                        res.status(500).json({ message: 'server error' })
+                })
 	})
 	.catch(err =>{
 		res.status(500).json({ message: 'server error' })

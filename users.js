@@ -12,6 +12,7 @@ const path = require('path')
 const nodemailer = require('nodemailer')
 const auth = require('./auth.js')
 const User = require('./user.js')
+const Notification = require('./notification.js')
 
 const storage = multer.diskStorage({
 	destination: (req,file,cb)=>{
@@ -23,6 +24,19 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage: storage })
+
+router.get('/notification', auth, (req,res,next)=>{
+
+	Notification.find({ triggeredBy: req.user._id })
+	.populate('triggeredBy', 'username photo _id')
+	.populate('triggeredTo', 'username photo _id')
+	.then(result =>{
+		res.status(200).json({ message: result })
+	})
+	.catch(err =>{
+		res.status(500).json({ message: 'server error' })
+	})
+})
 
 router.post('/signup', upload.single('photo'),(req,res,next)=>{
 	const { username, password, email, phone_number } = req.body
@@ -142,7 +156,20 @@ router.put('/follow',auth,(req,res,next)=>{
           $push:{followings :req.body.id}
       },{new:true})
 		.then(rsp =>{
-			res.status(200).json({ message: 'follow successfully' })
+
+			const model = new Notification({
+                        _id: new mongoose.Types.ObjectId(),
+          message: ' has started to follow you. You can check out his profile here',
+                        triggeredBy: req.user._id,
+                        triggeredTo: req.body.id
+                })
+                model.save()
+                .then(data =>{
+                res.status(200).json({ message: 'follow successfully' })
+                })
+                .catch(err =>{
+                        res.status(500).json({ message: 'server error' })
+                })
 		})
 		.catch(err =>{
 			res.status(500).json({ message: 'server error' })
@@ -181,6 +208,19 @@ router.put('/updatepic',auth,upload.single('photo'),(req,res,next)=>{
          if(err){
              return res.status(422).json({ message: "server error" })
          }
+		const model = new Notification({
+                        _id: new mongoose.Types.ObjectId(),
+                        message: 'somebody liked your post',
+                        triggeredBy: req.user._id,
+                        triggeredTo: req.body.id
+                })
+                model.save()
+                .then(data =>{
+                res.status(200).json({ message: 'liked successfully' })
+                })
+                .catch(err =>{
+                        res.status(500).json({ message: 'server error' })
+                })
          res.status(200).json({ message: 'photo updated' })
     })
 })

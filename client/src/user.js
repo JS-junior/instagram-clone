@@ -244,7 +244,7 @@ function User(){
                 onClick={ ()=>{ likePost(val._id) }}
                 className='navbar_icons'  />}
                 <ChatRoundedIcon
-                onClick={ ()=>{ history.push(`/comments/${val.postedBy._id}`)}}
+                onClick={ ()=>{ history.push(`/comments/${val._id}`)}}
                 className='navbar_icons' />
                 <ShareIcon className='navbar_icons' />
                 </CardContent>
