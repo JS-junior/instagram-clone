@@ -102,7 +102,8 @@ input:focus  {
 
 .notification_bar {
 	display: flex;
-	margin: 1vh 0vh 1vh 0vh;
+	margin: 2vh 0vh 2vh 0vh;
+	border-bottom: solid 1px black;
 }
 
 #notification_avatar {
@@ -144,3 +145,14 @@ input:focus  {
 	background-color: rgba(0,0,0,0.7);
 	z-index: 1000;
 }
+
+
+.room_avatar {
+	position: fixed;
+	top: 0%;
+	left: 90%;
+}
+
+
+
+
