@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Avatar, Button, Input, Typography } from '@material-ui/core';
+import { Avatar, Button, Input, AppBar, Toolbar, Typography } from '@material-ui/core';
 import { useParams, useHistory } from 'react-router-dom';
 import './App.css'
 import Components from './components.js'
@@ -38,8 +38,11 @@ function Notify (){
         return(
                 <>
 		<Components />
+		<AppBar color='white'  position='sticky'>
+		<Toolbar>
 		<Typography variant='h6'> Activity </Typography>
-
+		</Toolbar>
+		</AppBar><Toolbar />
 		{notification.map((val, index)=>{
 			return(
 				<>

@@ -27,7 +27,7 @@ const upload = multer({ storage: storage })
 
 router.get('/notification', auth, (req,res,next)=>{
 
-	Notification.find({ triggeredBy: req.user._id })
+	Notification.find({ triggeredTo: req.user._id })
 	.populate('triggeredBy', 'username photo _id')
 	.populate('triggeredTo', 'username photo _id')
 	.then(result =>{

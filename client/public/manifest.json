@@ -3,12 +3,12 @@
 
 
 {
-    "short_name": "whatsapp",
-    "name": "whatsapp",
+    "short_name": "instagram",
+    "name": "instagram",
     "icons": [
         {
-            "src": ",
-            "type": "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
+            "src":"instagram.jpeg",
+            "type": "image/jpeg",
             "sizes": "1024x1024"
         }
     ],

@@ -3,6 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Card, Avatar, Button, CardActionArea, CardMedia, CardHeader, CardContent, Typography, Menu, MenuItem } from '@material-ui/core'
 import jwt_decode from 'jwt-decode'
 import { State } from './state.js'
+import Pusher from 'pusher-js'
 
 function Chat(){
 

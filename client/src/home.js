@@ -14,6 +14,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import Heart from "react-animated-heart";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { State } from './state.js'
+import { actionTypes } from './reducer.js'
 import jwt_decode from 'jwt-decode'
 
 function Home(){
@@ -21,6 +22,8 @@ function Home(){
 	const [{ base_url }, dispatch ] = useContext(State)
 	const [ posts, setPosts ] = useState([])
 	const [ stories, setStories ] = useState([])
+	const [ user, setUser ] = useState("")
+	const [ isClick, setClick ] = useState(false)
 	const token = localStorage.getItem('jwt')
 	const user_id = jwt_decode(token)
 	const history = useHistory()
@@ -32,7 +35,25 @@ function Home(){
 		} else {
 
 			fetchPost()
+			fetch(`${base_url}/user/${user_id._id}`,{
+                                method: 'GET',
+                                headers: { authorization: 'bearer ' + token }
+                        })
+                        .then(res =>{
+                                return res.json()
+                        })
+                        .then(data =>{
+                                setUser(data.message.username)
+                                console.log(data.message)
 
+				dispatch({
+					type: actionTypes.SET_USERNAME,
+					username: user
+				})
+                        })
+                        .catch(err =>{
+                                console.log(err)
+                        })
 		}
 	 },[])
 
@@ -137,7 +158,8 @@ function Home(){
 src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token=076d4f57-316e-4bf8-a072-31c0db80cf8b'  
 	className='insta_logo_png' />
 	</center>
-	<ForumRoundedIcon className='messenger_icon' />
+	<ForumRoundedIcon onClick={ ()=>{ history.push(`/room/${user_id._id}`)}}
+	className='messenger_icon' />
 		</div>
 
 		<div className='stories_container'>
@@ -172,16 +194,29 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 		<Typography variant='subtitle1'>
 			{val.caption}
 		</Typography><br /></center>
-		{val.likes.includes(user_id._id) ?  <FavoriteIcon
+		{val.likes.includes(user_id._id) ?  <Heart isClick={true}
                 onClick={ ()=>{ unlikePost(val._id) }}
                 className='navbar_icons'  />
-                : <FavoriteBorderIcon
+                : <Heart isClick={false}
                 onClick={ ()=>{ likePost(val._id) }}
                 className='navbar_icons' />
                 }
 		<ChatRoundedIcon onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
 		className='navbar_icons' />
-		<ShareIcon className='navbar_icons' />
+		<ShareIcon onClick={ ()=>{ 
+		
+	if (navigator.canShare) {
+				navigator.share({
+					title: val.postedBy.username,
+					text: val.caption,
+				})
+					.then(() => console.log('Share was successful.'))
+					.catch((error) => console.log('Sharing failed', error))
+			} else {
+				console.log(`Your system doesn't support sharing files.`);
+			}
+		}}
+		className='navbar_icons' />
 		</CardContent>
 		</CardActionArea>
 		</Card>
