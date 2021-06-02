@@ -14,15 +14,16 @@ import Pusher from 'pusher-js'
 function Chat(){
 
 	const [ reply, setReply ] = useState("")
-	const [ messages,setMessages ] = useState([])
-	const { name, room } = useParams()
+	const [ chat,setChat ] = useState([])
+	const [ user, setUser ] = useState({})
+	const { creator, room } = useParams()
 	const history = useHistory()
 	const [{ base_url }, dispatch ] = useContext(State)
 	const token = localStorage.getItem('jwt')
-	const user_id = jwt_decode(token)
+	const decoded = jwt_decode(token)
 
 	useEffect(()=>{
-		fetch(`${base_url}/messages`, {
+		fetch(`${base_url}/messages/${creator}`, {
 			method: 'GET',
 			headers: { authorization: 'bearer ' + token }
 		})
@@ -30,8 +31,9 @@ function Chat(){
 			return res.json()
 		})
 		.then(data =>{
-			setMessages(data.message)
-			console.log(data.message)
+			setUser(data.user)
+			setChat(data.message)
+			console.log(data)
 		})
 		.catch(err =>{
 			console.log(err)
@@ -45,15 +47,15 @@ function Chat(){
     });
 
     var channel = pusher.subscribe('messages');
-    channel.bind('inserted', (newMessage)=> {;
-	setMessages([ ...messages, newMessage])
-	    console.log(messages)
+    channel.bind('inserted', (newMessage)=> {
+	setChat([ ...chat, newMessage])
+	   // console.log(chat)
     })
 	return ()=>{
 		channel.unbind_all()
 		channel.unsubscribe()
 	}
-	},[messages])
+	},[chat])
 
 	const sendMessage = ()=>{
 		
@@ -63,7 +65,7 @@ function Chat(){
 				authorization: 'bearer ' + token,
 				'Content-Type':'application/json'
 			},
-			body: JSON.stringify({ text: reply })
+			body: JSON.stringify({ text: reply, id: room })
 		})
 		.then(res =>{
 			return res.json()
@@ -82,39 +84,38 @@ function Chat(){
 		<>
 		<div className='chat'>
 		<div className='chat_header'>
-		<Avatar />
-
+		<Avatar src={`${base_url}/${user.photo}`}/>
+		
 		<div className='chat_header_info'>
-		<Typography variant='h6'> room name </Typography>
-		<p> Last seen @ 1:40am </p>
+		<Typography variant='h6'> {user.name} </Typography>
+		<p> group created by gauranga </p>
 		</div>
 
 		<div className='chat_header_icons'>
 		<MoreVertIcon />
 		</div>
 		</div>
-
+		
 		<div className='chat_body'>
-		{messages.map((val, index)=>{
+		{chat.map((val, index)=>{
 			return(
 				<>
-		{val.name === name ?
+		{val.name === decoded.username ?
 		<>
-		<p className='chat_message_receive'>
+		<p className='chat_message_receive' key={index} id={index}>
                 <span className='chat_name'> You  </span> {val.text}
                 <span className='chat_timestamp'> 11:50</span></p> </>
 			:
 		<>
-                <p className='chat_message'>
+                <p className='chat_message' key={index} id={index}>
                 <span className='chat_name'> {val.name} </span> {val.text}
                 <span className='chat_timestamp'> 11:50</span></p>
                 </>}
-
 				</>
 			)
 		})}
 		</div>
-	
+		
 
 		<div className='chat_footer'> 
 		<InsertEmoticonIcon />

@@ -17,10 +17,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-router.get('/messages',auth,(req,res,next)=>{
-	Room.find({ createdBy: req.body.id })
+router.get('/messages/:id',auth,(req,res,next)=>{
+	Room.find({ createdBy: req.params.id })
+	.populate('createdBy', 'username photo _id')
 	.then(result =>{
-		res.status(200).json({ message: result.message })
+		console.log(result[0].createdBy)
+		res.status(200).json({ message: result[0].messages, user: result[0] })
 	})
 	.catch(err =>{
 		res.status(500).json({ message: err })
@@ -39,9 +41,11 @@ router.put('/messages',auth,(req,res,next)=>{
 	
 	Room.findByIdAndUpdate(req.body.id, { $push: { messages: message } },{ new: true })
 	.then(result =>{
-		res.status(200).json({ message: result.message })
+		res.status(200).json({ message: result })
 	})
 	.catch(err =>{
+
+		console.log(err)
 		res.status(500).json({ message:  err })
 	})
 })
@@ -51,7 +55,8 @@ router.post('/room',auth,upload.single('photo'),(req,res,next)=>{
 	const room = {
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
-		photo: req.file.filename
+		photo: req.file.filename,
+		createdBy: req.user._id,
 	}
 
 	Room.create(room)
@@ -68,6 +73,7 @@ router.post('/room',auth,upload.single('photo'),(req,res,next)=>{
 router.get('/rooms', auth, (req,res,next)=>{
 
 	Room.find({ createdBy: req.user._id })
+	.populate('createdBy', 'username photo _id')
 	.then(rooms =>{
 		res.status(200).json({ message: rooms })
 	})

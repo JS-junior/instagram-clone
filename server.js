@@ -16,21 +16,25 @@ const pusher = new Pusher({
 
 
 db.once('open',()=>{
-const messageCollection = db.collection('messages')
+const messageCollection = db.collection('rooms')
 const changeStream = messageCollection.watch()
 
 changeStream.on('change',(change)=>{
         console.log(change)
 
-        if(change.operationType === 'insert'){
-                const user = change.fullDocument
-
-                pusher.trigger('messages', 'inserted', {
-                        name: user.name,
-                        message: user.text
-                })
+        if(change.operationType === 'update'){
+                const user = change.updateDescription
+		console.log('This is change stream data \n \n \n')
+		console.log(user)
+		/*
+                pusher.trigger('rooms', 'inserted', {
+                        
+                
+                })*/
 
         } else {
+		//const user = change.fullDocument
+               // console.log(user.message[user.messages.length].text)
                 console.log('pusher error')
         }
 })

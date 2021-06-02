@@ -133,7 +133,7 @@ input:focus  {
 	width: 90%;
 	transform: translate(-50%, -50%);
 	background-color: white;
-	z-index: 1000;
+	z-index: 1200;
 }
 
 .outer_modal{
@@ -143,7 +143,7 @@ input:focus  {
 	right: 0;
 	bottom: 0;
 	background-color: rgba(0,0,0,0.7);
-	z-index: 1000;
+	z-index: 1200;
 }
 
 
@@ -184,9 +184,6 @@ input:focus  {
 	flex: 1;
 }
 
-.chat_header_icons {
-
-}
 
 .chat_header_info > p {
 	color: gray;
@@ -251,4 +248,8 @@ input:focus  {
 	border-radius: 30px;
 	border: none;
 	
+}
+
+.create_room_cross{
+	margin-left: auto;
 }
