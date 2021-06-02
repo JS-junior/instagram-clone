@@ -4,6 +4,7 @@ import { Card, Avatar, Button, CardActionArea, AppBar, Toolbar, Input, CardMedia
 import jwt_decode from 'jwt-decode'
 import './App.css'
 import { State } from './state.js'
+import RateReviewIcon from '@material-ui/icons/RateReview';
 
 function Rooms(){
 
@@ -15,6 +16,22 @@ function Rooms(){
 	const [ term, setTerm ] = useState("")
         const token = localStorage.getItem('jwt')
         const user_id = jwt_decode(token)
+
+	useEffect(()=>{
+                fetch(`${base_url}/rooms`, {
+                        method: 'GET',                                                                                  headers: { authorization: 'bearer ' + token }
+                })
+                .then(res =>{
+                        return res.json()
+                })
+                .then(data =>{
+                        setRooms(data.message)
+                        console.log(data.message)
+                })
+                .catch(err =>{
+                        console.log(err)
+                })
+        },[rooms])
 
 	useEffect(()=>{
 	fetch(`${base_url}/user/${user_id._id}`,{
@@ -35,18 +52,21 @@ function Rooms(){
 
         return(
                 <>
-		<Typography variant='h6'>{user.username}</Typography>{/*
-		<Avatar className='room_avatar' src={`${base_url}/${user.photo}`} />*/}
+		<RateReviewIcon />
 		<AppBar position='sticky' color='white'>
-		<input className='search_input' value={term} placeholder='search'
+		<Typography variant='h6'>{user.username}</Typography><br />
+		<div className='room_appbar_div'>
+		<input className='search_input_room' value={term} placeholder='search'
 		onChange={ (e)=>{ setTerm(e.target.value) }} />
 		<Avatar className='room_avatar' src={`${base_url}/${user.photo}`} />
-			</AppBar><Toolbar />
+		</div>
+		</AppBar>
 
 		{rooms.map((val,index)=>{
 			return(
 				<>
-		<div className='notification_bar'>
+		<div className='notification_bar' 
+		onClick={ ()=>{ history.push(`/chat/${user.username}/hello`) }}>
         <Avatar className='notification_text' src={`${base_url}/${user.photo}`}
                 id='notification_avatar'  />
                 <Typography variant='subtitle5'>

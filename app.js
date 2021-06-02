@@ -6,6 +6,7 @@ const cors = require('cors')
 const morgan = require('morgan')
 const users = require('./users.js')
 const posts = require('./posts.js')
+const messages = require('./messages.js')
 const server = require('http').createServer(app)
 const db = mongoose.connection
 
@@ -15,6 +16,7 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(users)
 app.use(posts)
+app.use(messages)
 app.use(express.static('./uploads'))
 app.use(cors())
 mongoose.connect(`mongodb+srv://hitartha:H6pnk72QnpWR8zqj@cluster0.2vlug.mongodb.net/data?retryWrites=true&w=majority`,{

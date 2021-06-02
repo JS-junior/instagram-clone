@@ -24,6 +24,12 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-analytics.js"></script>
     <title>instagram</title>
   </head>
   <body>
@@ -43,6 +49,22 @@
     -->
   </body>
   <script>
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDrlQ3Rw30witA4BezXlvSYXAHbTNfesSc",
+    authDomain: "instagram-clone-0000.firebaseapp.com",
+    databaseURL: "https://instagram-clone-0000-default-rtdb.firebaseio.com",
+    projectId: "instagram-clone-0000",
+    storageBucket: "instagram-clone-0000.appspot.com",
+    messagingSenderId: "856101803901",
+    appId: "1:856101803901:web:d966421840bc1f50049e14",
+    measurementId: "G-JBDLEW0PVE"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
 
           if('serviceWorker' in navigator){
                 window.addEventListener('load',()=>{

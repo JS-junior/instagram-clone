@@ -148,11 +148,107 @@ input:focus  {
 
 
 .room_avatar {
-	position: fixed;
-	top: 0%;
-	left: 90%;
+	display: inline-block;
+}
+
+.search_input_room{
+	display: inline-block;
+        padding: 0.5vh 3vh 3vh 0.5vh;
+        width: 65%;
+        height: 0.5vh;
+        background-color: #dbdbdb;
+        margin: 0vh 3vh 1vh 2vh;
+        border-radius: 0.5vh 0.5vh 0.5vh 0.5vh;
+        border: solid 1px white;
+
+}
+
+.room_appbar_div {
+	display: flex;
+
+}
+
+.chat {
+	display: flex;
+	flex-direction: column;
+	flex: 0.65;
+}
+.chat_header {
+	padding: 3px;
+	display: flex;
+	align-items: center;
+	border-bottom: solid 1px lightgray;
+}
+
+.chat_header_info {
+	flex: 1;
+}
+
+.chat_header_icons {
+
+}
+
+.chat_header_info > p {
+	color: gray;
+}
+
+.chat_body {
+	height: 82vh;
+	min-height: 100%;
+	background-image: url('https://firebasestorage.googleapis.com/v0/b/what-sapp-clone-f427e.appspot.com/o/images%20-%202020-12-31T011720.878.jpeg?alt=media&token=fe7bfddd-ab2a-43c6-bde1-97da41e042db');
+	background-position: center;
+	background-repeat: repeat;
+	overflow: scroll;
+}
+
+.chat_message {
+	position: relative;
+	width: fit-content;
+	background-color: white;
+	border-radius: 10px;
+	padding: 5px;;
+}
+
+.chat_name {
+	position: absolute;
+	top: -15px;
+	font-weight: 800;
+	margin-bottom: 15px;
+	margin-right: 3px;
+	font-size: 90%;
+}
+
+.chat_timestamp {
+	margin-left: 10px;
+	font-size: x-small;
 }
 
 
+.chat_message_receive {
+	margin-left: auto;
+	background-color: #dcf8c6;
+	position: relative;
+        width: fit-content;
+	padding: 5px;
+        border-radius: 10px;
+}
 
+.chat_footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-top: solid 1px lightgray;
 
+}
+
+.chat_footer > form {
+	flex: 1;
+	display: flex;
+}
+
+.chat_footer > form > input {
+	flex: 1;
+	border-radius: 30px;
+	border: none;
+	
+}

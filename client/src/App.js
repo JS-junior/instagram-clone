@@ -38,7 +38,7 @@ function App() {
 	  <Route path='/story/:id' component={Story} />
 	  <Route path='/createstory' component={CreateStory} />
 	  <Route path='/edit/:id' component={Edit} />
-	  <Route path='/chat/:id' component={Chat} />
+	  <Route path='/chat/:name/:room' component={Chat} />
 	  <Route path='/room/:id' component={Rooms} />
 	  <Route path='/verify/:id' component={Verify} />
 	  <Route component={Error} />
