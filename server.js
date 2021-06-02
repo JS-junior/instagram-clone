@@ -16,6 +16,15 @@ const pusher = new Pusher({
 
 
 db.once('open',()=>{
+
+const filter = [{
+        $match: {
+            $and: [
+                { "updateDescription.updatedFields.SomeFieldA": { $exists: true } },
+                { operationType: "update" }]
+        }
+    }];
+
 const messageCollection = db.collection('rooms')
 const changeStream = messageCollection.watch()
 
@@ -28,13 +37,12 @@ changeStream.on('change',(change)=>{
 		console.log(user)
 		/*
                 pusher.trigger('rooms', 'inserted', {
-                        
-                
+		   name: 
+		   text: 
                 })*/
 
         } else {
-		//const user = change.fullDocument
-               // console.log(user.message[user.messages.length].text)
+		
                 console.log('pusher error')
         }
 })
