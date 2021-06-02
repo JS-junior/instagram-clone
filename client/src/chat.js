@@ -9,7 +9,6 @@ import MicIcon from '@material-ui/icons/Mic';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { State } from './state.js'
 import './App.css'
-import Pusher from 'pusher-js'
 
 function Chat(){
 
@@ -42,20 +41,7 @@ function Chat(){
 
 	useEffect(()=>{
 
-    var pusher = new Pusher('20db7d21b19977b8feef', {
-      cluster: 'ap2'
-    });
-
-    var channel = pusher.subscribe('messages');
-    channel.bind('inserted', (newMessage)=> {
-	setChat([ ...chat, newMessage])
-	   // console.log(chat)
-    })
-	return ()=>{
-		channel.unbind_all()
-		channel.unsubscribe()
-	}
-	},[chat])
+	},[])
 
 	const sendMessage = ()=>{
 		

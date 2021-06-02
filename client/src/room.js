@@ -10,7 +10,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 
 function Rooms(){
 
-        const [ rooms, setRooms ] = useState([1,2,3])
+        const [ rooms, setRooms ] = useState([])
 	const [ user, setUser ] = useState([])
         const history = useHistory()
 	const { id } = useParams()
@@ -143,11 +143,14 @@ function Rooms(){
 				<>
 		<div className='notification_bar' 
 		onClick={ ()=>{ history.push(`/chat/${val.createdBy._id}/${val._id}`) }}>
-        <Avatar className='notification_text' src={`${base_url}/${user.photo}`}
+        <Avatar className='notification_text' src={`${base_url}/${val.photo}`}
                 id='notification_avatar'  />
                 <Typography variant='subtitle5'>
                 <Typography className='notification_text' id='notification_text'
-                variant='h6'> {user.username} </Typography><br /> 
+                variant='h6'> {val.name} </Typography><br />
+		<span style={{ fontWeight: '800' }}>
+		{val.messages[val.messages.length - 1].name}</span>
+		: {val.messages[val.messages.length - 1].text}
                 </Typography>
                 </div>
 				</>
