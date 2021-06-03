@@ -5,6 +5,7 @@ const model = mongoose.Schema({
 	name: { type: String, required: true },
 	photo: { type: String, required: true },
 	createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+	users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 	messages: [{
 	_id: mongoose.Schema.Types.ObjectId,
 	name: { type: String },

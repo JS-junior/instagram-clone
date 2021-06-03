@@ -61,7 +61,14 @@ router.post('/room',auth,upload.single('photo'),(req,res,next)=>{
 
 	Room.create(room)
 	.then(result =>{
-		res.status(200).json({ message: result })
+	Room.findByIdAndUpdate(result._id, { $push: { users: req.user._id }},{ new: true })
+		.then(data =>{
+		res.status(200).json({ message: data })
+		})
+		.catch(err =>{
+			res.status(500).json({ message: 'servee error' })
+		})
+
 	})
 	.catch(err =>{
 		res.status(500).json({ message: 'server error' })
@@ -75,12 +82,32 @@ router.get('/rooms', auth, (req,res,next)=>{
 	Room.find()
 	.populate('createdBy', 'username photo _id')
 	.then(rooms =>{
-		res.status(200).json({ message: rooms })
+		console.log(rooms)
+		res.status(200).json({ message: rooms  })
 	})
 	.catch(err =>{
 		res.status(500).json({ message: err })
 	})
 })
 
+router.put('/adduser/:id/:userId', auth, (req,res,next)=>{
+Room.findByIdAndUpdate(req.params.id, { $push: { users: req.params.userId }}, { new: true })
+	.then(result =>{
+		res.status(200).json({ message: 'user added' })
+	})
+	.catch(err =>{
+		res.status(500).json({ message: err })
+	})
+})
+
+router.put('/removeuser/:id/:userId', auth, (req,res,next)=>{
+Room.findByIdAndUpdate(req.params.id, { $pull: { users: req.user._id }}, { new: true })
+        .then(result =>{
+                res.status(200).json({ message: 'user added' })
+        })
+        .catch(err =>{
+                res.status(500).json({ message: err })
+        })
+})
 
 module.exports = router

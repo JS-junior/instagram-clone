@@ -17,6 +17,7 @@ function Rooms(){
         const [{ base_url }, dispatch ] = useContext(State)
 	const [ term, setTerm ] = useState("")
 	const [ photo, setPhoto ] = useState({})
+	const [ room, setRoom ] = useState([])
 	const [ roomname, setRoomName ] = useState("")
 	const [ open, setOpen ] = useState(false)
         const token = localStorage.getItem('jwt')
@@ -141,6 +142,8 @@ function Rooms(){
 		{rooms.map((val,index)=>{
 			return(
 				<>
+	
+				{val.users.includes(user_id._id) ? <>
 		<div className='notification_bar' 
 		onClick={ ()=>{ history.push(`/chat/${val.createdBy._id}/${val._id}`) }}>
         <Avatar className='notification_text' src={`${base_url}/${val.photo}`}
@@ -154,7 +157,7 @@ function Rooms(){
 		{val.messages[val.messages.length - 1].text}</>
 		}
                 </Typography>
-                </div>
+                </div></>:null}
 				</>
 			)
 		})}

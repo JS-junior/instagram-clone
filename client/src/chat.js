@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import ReactDom from 'react-dom'
 import { Card, Avatar, Button, CardActionArea, CardMedia, CardHeader, CardContent, Typography, Menu, MenuItem } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import jwt_decode from 'jwt-decode'
@@ -15,12 +16,14 @@ function Chat(){
 	const [ reply, setReply ] = useState("")
 	const [ chat,setChat ] = useState([])
 	const [ user, setUser ] = useState({})
+	const [ friends, setFriends ] = useState([])
 	const { creator, room } = useParams()
 	const history = useHistory()
 	const [{ base_url }, dispatch ] = useContext(State)
 	const token = localStorage.getItem('jwt')
 	const decoded = jwt_decode(token)
 	const bottomRef = useRef();
+	const [ open, setOpen ] = useState(false)
 
 	const scrollToBottom = () => {
         bottomRef.current.scrollIntoView({
@@ -47,6 +50,22 @@ function Chat(){
 		})
 	},[chat])
 
+	useEffect(()=>{
+		fetch(`${base_url}/user/${decoded._id}`,{
+                                headers: {
+                                        authorization: 'bearer ' + token
+                                }})
+                        .then(res =>{
+                                return res.json()
+                        })
+                        .then(data =>{
+                                setFriends(data.message.followers)
+                                console.log(data.message)
+                        })
+                        .catch(err =>{
+                                console.log(err)
+                        })
+	},[])
 
 	const sendMessage = ()=>{
 		
@@ -69,11 +88,36 @@ function Chat(){
 			console.log(err)
 		})
 	}
+
+	function AddUserModal(){
+
+		return ReactDom.createPortal(
+			<>
+			{!open ? null :
+                <div className='outer_modal'>
+                <div className='inner_modal'>
+                <Typography variant='h6'> Add your friends</Typography>
+
+		{friends.map((val, index)=>{
+			return(
+				<>
+		<Button>{val}</Button><br />
+				</>
+			)
+		})}
+
+                <Button onClick={()=>{ setOpen(false) }}> close </Button>
+                </div></div>
+                }
+			</>, document.getElementById('modal')
+		)
+	}
 				
 
 	return(
 		<>
 		<div className='chat'>
+		<AddUserModal />
 		<div className='chat_header'>
 		<Avatar src={`${base_url}/${user.photo}`}/>
 		
@@ -83,7 +127,7 @@ function Chat(){
 		</div>
 
 		<div className='chat_header_icons'>
-		<MoreVertIcon />
+		<MoreVertIcon onClick={()=>{ setOpen(true) }}/>
 		</div>
 		</div>
 		
