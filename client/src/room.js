@@ -50,7 +50,7 @@ function Rooms(){
         },[])
 
 	useEffect(()=>{
-	fetch(`${base_url}/user/${user_id._id}`,{
+	fetch(`${base_url}/user/${id}`,{
                                 method: 'GET',
                                 headers: { authorization: 'bearer ' + token }
                         })
@@ -148,9 +148,11 @@ function Rooms(){
                 <Typography variant='subtitle5'>
                 <Typography className='notification_text' id='notification_text'
                 variant='h6'> {val.name} </Typography><br />
+				{val.messages.length < 1 ? null : <>
 		<span style={{ fontWeight: '800' }}>
-		{val.messages[val.messages.length - 1].name}</span>
-		: {val.messages[val.messages.length - 1].text}
+		{val.messages[val.messages.length - 1].name}: </span>
+		{val.messages[val.messages.length - 1].text}</>
+		}
                 </Typography>
                 </div>
 				</>

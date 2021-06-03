@@ -113,7 +113,6 @@ function Home(){
                 .then(data =>{
                         if(data.message === 'unliked successfully'){
                         console.log(data)
-                        toast.success('likwd')
                         fetchPost()
                         } else {
                                 toast.error('error occured')
@@ -121,14 +120,14 @@ function Home(){
                 })
         }
 
-        const likePost = (id)=>{
+        const likePost = (id, notify)=>{
                 fetch(`${base_url}/like`,{
                         method: 'PUT',
                         headers: {
                                 authorization: 'bearer ' + token,
                                 'Content-Type':'application/json'
                         },
-                        body: JSON.stringify({ id: id })
+			body: JSON.stringify({ id: id, notifyId: notify })
       })
 
                         .then(res =>{
@@ -137,7 +136,6 @@ function Home(){
                 .then(data =>{
                         if(data.message === 'liked successfully'){
                         console.log(data)
-                        toast.success(data.message)
                         fetchPost()
                         } else {
                                 toast.error('error occured')
@@ -198,9 +196,9 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
                 onClick={ ()=>{ unlikePost(val._id) }}
                 className='navbar_icons'  />
                 : <Heart isClick={false}
-                onClick={ ()=>{ likePost(val._id) }}
+                onClick={ ()=>{ likePost(val._id, val.postedBy._id) }}
                 className='navbar_icons' />
-                }
+                } 
 		<ChatRoundedIcon onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
 		className='navbar_icons' />
 		<ShareIcon onClick={ ()=>{ 
@@ -216,13 +214,16 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
 				console.log(`Your system doesn't support sharing files.`);
 			}
 		}}
-		className='navbar_icons' />
+		className='navbar_icons' /><br />
+		<span style={{ marginLeft: '13%',fontWeight: '600'}}> {val.likes.length}</span>
 		</CardContent>
 		</CardActionArea>
 		</Card>
 		</>
 	)
 		})}
+
+		<br /><br /><br />
 
 		</>
 	)

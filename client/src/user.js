@@ -11,6 +11,7 @@ import jwt_decode from 'jwt-decode'
 import { State } from './state.js'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import { toast, ToastContainer } from 'react-toastify'
+import Heart from 'react-animated-heart'
 
 function User(){
 
@@ -57,13 +58,13 @@ function User(){
 	
 
 
-	const likePost = (uid)=>{
+	const likePost = (uid, notify)=>{
 		fetch(`${base_url}/like`, {
 			method: 'PUT',
 			headers: { authorization: 'bearer ' + token,
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ id: uid })
+			body: JSON.stringify({ id: uid, notifyId: notify })
 		})
 		.then(res =>{
 			return res.json()
@@ -71,7 +72,6 @@ function User(){
 		.then(data =>{
 			if(data.message === 'liked successfully'){
 				console.log(data.message)
-				toast.success(data.message)
 				fetchPost()
 			} else {
 				toast.error('an error occured')
@@ -97,7 +97,6 @@ function User(){
 		.then(data =>{
 			if(data.message === 'unliked successfully'){
 				console.log(data.message)
-				toast.success(data.message)
 				fetchPost()
 			} else {
 				toast.error('server error')
@@ -238,15 +237,18 @@ function User(){
                 <CardContent><center>
                 <Typography variant='subtitle1'>{val.caption}</Typography>
                 <br /></center>
-		{val.likes.includes(decoded._id) ? <FavoriteIcon className='navbar_icoms'
-		onClick={()=>{ unlikePost(val._id) }} /> :
-                <FavoriteBorderIcon
-                onClick={ ()=>{ likePost(val._id) }}
-                className='navbar_icons'  />}
+		{val.likes.includes(decoded._id) ?  <Heart isClick={true}
+                onClick={ ()=>{ unlikePost(val._id) }}
+                className='navbar_icons'  />
+                : <Heart isClick={false}
+                onClick={ ()=>{ likePost(val._id, val.postedBy._id) }}
+                className='navbar_icons' />
+                }
                 <ChatRoundedIcon
                 onClick={ ()=>{ history.push(`/comments/${val._id}`)}}
                 className='navbar_icons' />
-                <ShareIcon className='navbar_icons' />
+                <ShareIcon className='navbar_icons' /><br />
+		<span style={{ marginLeft: '13%',fontWeight: '600'}}> {val.likes.length}</span>
                 </CardContent>
 		</CardActionArea>
                 </Card>
@@ -254,6 +256,7 @@ function User(){
 			)
 		})}
 
+		<br /><br /><br />
 		</>
         )
 }

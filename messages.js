@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router.get('/messages/:id',auth,(req,res,next)=>{
-	Room.find({ createdBy: req.params.id })
+	Room.find({ _id: req.params.id })
 	.populate('createdBy', 'username photo _id')
 	.then(result =>{
 		console.log(result[0].createdBy)

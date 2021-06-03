@@ -42,7 +42,7 @@ function Notify (){
 		<Toolbar>
 		<Typography variant='h6'> Activity </Typography>
 		</Toolbar>
-		</AppBar><Toolbar />
+		</AppBar>
 		{notification.map((val, index)=>{
 			return(
 				<>

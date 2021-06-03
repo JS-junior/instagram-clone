@@ -9,6 +9,7 @@ import MicIcon from '@material-ui/icons/Mic';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { State } from './state.js'
 import './App.css'
+import { io }  from 'socket.io-client'
 
 function Chat(){
 
@@ -20,9 +21,18 @@ function Chat(){
 	const [{ base_url }, dispatch ] = useContext(State)
 	const token = localStorage.getItem('jwt')
 	const decoded = jwt_decode(token)
+	const socket = io.connect(base_url)
+	const bottomRef = useRef();
+
+	const scrollToBottom = () => {
+        bottomRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        });
+    }
 
 	useEffect(()=>{
-		fetch(`${base_url}/messages/${creator}`, {
+		fetch(`${base_url}/messages/${room}`, {
 			method: 'GET',
 			headers: { authorization: 'bearer ' + token }
 		})
@@ -40,7 +50,8 @@ function Chat(){
 	},[])
 
 	useEffect(()=>{
-
+		socket.emit('user-joined', { username: decoded.username })
+		socket.on('new-user', ({ id, username })=>{ console.log(id, username) })
 	},[])
 
 	const sendMessage = ()=>{
@@ -86,6 +97,7 @@ function Chat(){
 		{chat.map((val, index)=>{
 			return(
 				<>
+
 		{val.name === decoded.username ?
 		<>
 		<p className='chat_message_receive' key={index} id={index}>
@@ -96,13 +108,15 @@ function Chat(){
                 <p className='chat_message' key={index} id={index}>
                 <span className='chat_name'> {val.name} </span> {val.text}
                 <span className='chat_timestamp'> 11:50</span></p>
+		
+		
                 </>}
+
 				</>
 			)
 		})}
 		</div>
 		
-
 		<div className='chat_footer'> 
 		<InsertEmoticonIcon />
 		<form>

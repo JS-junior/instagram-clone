@@ -126,7 +126,7 @@ router.put('/like',auth,(req,res,next)=>{
 			_id: new mongoose.Types.ObjectId(),
 			message: ' liked your post. You can check out his profile.',
 			triggeredBy: req.user._id,
-			triggeredTo: req.body.id
+			triggeredTo: req.body.notifyId
 		})
 		model.save()
 		.then(data =>{

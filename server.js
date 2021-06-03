@@ -4,6 +4,7 @@ const fs = require('fs')
 const app = require('./app.js')
 const mongoose = require('mongoose')
 const db = mongoose.connection
+const users = []
 
 db.once('open',()=>{
 
@@ -17,7 +18,7 @@ changeStream.on('change',(change)=>{
                 const user = change.updateDescription.updatedFields
 		console.log('This is change stream data \n \n \n')
 		console.log(user) 
-		
+	
 
         } else {
 		
@@ -27,5 +28,18 @@ changeStream.on('change',(change)=>{
 })
 
 const server = http.createServer(app)
+const io = require("socket.io")(server)
+
+io.on("connection", (socket) => {
+  socket.on('user-joined',({ username })=>{
+	  const user = {
+		  username: username,
+		  id: socket.id
+	  }
+
+	  io.emit('new-user', users)
+  })
+
+})
 
 server.listen(process.env.PORT || 8080)

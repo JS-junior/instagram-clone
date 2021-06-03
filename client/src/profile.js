@@ -66,7 +66,6 @@ function Profile(){
                 .then(data =>{
                         if(data.message === 'unliked successfully'){
                         console.log(data)
-                        toast.success('likwd')
 			fetchPost()
                         } else {
                                 toast.error('error occured')
@@ -74,20 +73,20 @@ function Profile(){
 		})
 	}
 
-	const likePost = (id)=>{
+	const likePost = (id, notify)=>{
 		fetch(`${base_url}/like`,{
                         method: 'PUT',
                         headers: {
                                 authorization: 'bearer ' + token,
                                 'Content-Type':'application/json'                                                       },
-                        body: JSON.stringify({ id: id })                                              })                                                                                            
+                        body: JSON.stringify({ id: id, notifyId: notify }) 
+		})                                                                                            
 			.then(res =>{
                         return res.json()
                 })
                 .then(data =>{
                         if(data.message === 'liked successfully'){
                         console.log(data)
-                        toast.success(data.message)
 			fetchPost()
                         } else {
                                 toast.error('error occured')
@@ -221,20 +220,21 @@ function Profile(){
 		<Typography variant='subtitle1'>{val.caption}</Typography>
 		<br /></center>
 
-		{val.likes.includes(user_id._id) ?  <FavoriteIcon
-		onClick={ ()=>{ unlikePost(val._id) }}
-		className='navbar_icons'  />
-		: <FavoriteBorderIcon
-		onClick={ ()=>{ likePost(val._id) }}
-		className='navbar_icons' />
-		}
+		{val.likes.includes(user_id._id) ?  <Heart isClick={true}
+                onClick={ ()=>{ unlikePost(val._id) }}
+                className='navbar_icons'  />
+                : <Heart isClick={false}
+                onClick={ ()=>{ likePost(val._id, val.postedByy._id) }}
+                className='navbar_icons' />
+                }
 
                 <ChatRoundedIcon 
 		onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
 		className='navbar_icons' />
                 <ShareIcon className='navbar_icons' />
 		<DeleteIcon className='navbar_icons' 
-		onClick={()=>{ deletePost(val._id) }} />
+		onClick={()=>{ deletePost(val._id) }} /><br />
+		<span style={{ marginLeft: '13%',fontWeight: '600'}}> {val.likes.length}</span>
                 </CardContent>
                 </CardActionArea>                                                             
 		</Card> 
