@@ -9,7 +9,6 @@ import MicIcon from '@material-ui/icons/Mic';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { State } from './state.js'
 import './App.css'
-import { io }  from 'socket.io-client'
 
 function Chat(){
 
@@ -21,7 +20,6 @@ function Chat(){
 	const [{ base_url }, dispatch ] = useContext(State)
 	const token = localStorage.getItem('jwt')
 	const decoded = jwt_decode(token)
-	const socket = io.connect(base_url)
 	const bottomRef = useRef();
 
 	const scrollToBottom = () => {
@@ -47,12 +45,8 @@ function Chat(){
 		.catch(err =>{
 			console.log(err)
 		})
-	},[])
+	},[chat])
 
-	useEffect(()=>{
-		socket.emit('user-joined', { username: decoded.username })
-		socket.on('new-user', ({ id, username })=>{ console.log(id, username) })
-	},[])
 
 	const sendMessage = ()=>{
 		
