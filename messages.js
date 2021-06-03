@@ -72,7 +72,7 @@ router.post('/room',auth,upload.single('photo'),(req,res,next)=>{
 
 router.get('/rooms', auth, (req,res,next)=>{
 
-	Room.find({ createdBy: req.user._id })
+	Room.find()
 	.populate('createdBy', 'username photo _id')
 	.then(rooms =>{
 		res.status(200).json({ message: rooms })
