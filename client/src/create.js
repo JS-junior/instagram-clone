@@ -40,9 +40,11 @@ function Create(){
 	const post = ()=>{
 
 		const form = new FormData()
+
 		form.append('photo', photo)
 		form.append('caption', caption)
-		form.append('tags', users)
+
+		users.forEach((item) => form.append("tags", item))
 
 		fetch(`${base_url}/post`,{
 			method: 'POST',
@@ -133,7 +135,8 @@ function Create(){
 
 		const user = {
 			username: username,
-			image: image
+			image: image,
+			id: id
 		}
 
 		setFriends((prevdata)=>{
