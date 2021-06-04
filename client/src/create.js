@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Avatar, Button, Input, Typography, Card, AppBar, Toolbar,  CardMedia, CardContent, CardHeader, CardActionArea } from '@material-ui/core'
 import { useParams, useHistory } from 'react-router-dom'
+import ReactDom from 'react-dom'
 import './App.css'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ShareIcon from '@material-ui/icons/Share';
@@ -17,8 +18,13 @@ function Create(){
 
         const [ caption, setCaption ] = useState("")
 	const [ photo, setPhoto ] = useState({})
+	const [ users, setUsers ] = useState([])
+	const [ friends, setFriends ] = useState([])
+	const [ results, setResults ] = useState([])
+	const [ query, setQuery ] = useState("")
 	const fileInput = useRef()
 	const history = useHistory()
+	const [ userPopup, setUserPopup ] = useState(false)
 	const [{ base_url }, dispatch ] = useContext(State)
 	const token = localStorage.getItem('jwt')
 
@@ -36,6 +42,7 @@ function Create(){
 		const form = new FormData()
 		form.append('photo', photo)
 		form.append('caption', caption)
+		form.append('tags', users)
 
 		fetch(`${base_url}/post`,{
 			method: 'POST',
@@ -59,6 +66,7 @@ function Create(){
 			toast.error('error occured')
 		})
 		}
+
 	useEffect(()=>{
                 const token = localStorage.getItem('jwt');
 		if(!token){
@@ -68,9 +76,75 @@ function Create(){
                 }
         },[])
 
+
+	function UsersModal(){
+
+                return ReactDom.createPortal(
+                        <>
+                        {!userPopup ? null :
+                <div className='outer_modal'>
+                <div className='inner_modal'>
+                <Typography variant='h6'> Total users </Typography>
+                                <center>
+                        {friends.map((val, index)=>{
+                                return(
+                                        <>
+                <div className='adduser_modal'>
+                <Avatar className='adduser_modal_avatar' src={`${base_url}/${val.image}`} />
+                <Button className='adduser_modal_username'>{val.username}</Button>
+                </div><br />
+					</>
+				)
+			})}
+                 </center>
+                <Button onClick={()=>{ setUserPopup(false) }}> close </Button>
+                </div></div>}
+
+                        </>, document.getElementById('modal')
+                )
+        }
+
+	const search = ()=>{
+                fetch(`${base_url}/search/${query}`,{
+                        method: 'POST',
+                        body: JSON.stringify({ email: query.toLowerCase() }),
+                        headers: {
+                                authorization: 'bearer ' + token,
+                                'Content-Type':'application/json'
+                        }
+                })
+                .then(res =>{
+                        return res.json()
+                })
+                .then(data =>{
+                        console.log(data)
+                        setResults(data.message)
+                })
+                .catch(err =>{
+                        console.log(err)
+                })
+        }
+
+	const adduser = (id, username, image) =>{
+		setUsers((prevdata)=>{
+			return [...prevdata, id] 
+		})
+		console.log(users)
+
+		const user = {
+			username: username,
+			image: image
+		}
+
+		setFriends((prevdata)=>{
+			return [...prevdata, user]
+		})
+	}
+
         return(
                 <>
 		<Components />
+		<UsersModal />
 		<AppBar position="fixed" color='gray'>
 		<Toolbar>
 		<Typography variant='h6'> New post </Typography>
@@ -91,11 +165,25 @@ function Create(){
 		onChange={ (e)=>{ setCaption(e.target.value) }}
 		placeholder='add a caption' />
 		<Typography variant='h6'> Tag people    
-		<input className='search_input' placeholder='search' /></Typography> 
+		<input className='search_input' value={query} placeholder='search' 
+		onChange={(e)=>{ setQuery(e.target.value); search()}}/></Typography> 
+		{results.map((val, index)=>{
+			return(
+				<>
+		{users.includes(val._id) ? null : <>
+	    <Avatar className='adduser_modal_avatar' src={`${base_url}/${val.photo}`} />
+                <Button className='adduser_modal_username'>{val.username}</Button><br />
+                <AddBoxIcon onClick={()=>{ adduser(val._id, val.username, val.photo) }} />
+			</>}
+				</>
+			)
+		})}
                 </CardContent>
                 </CardActionArea>
                 </Card><br />
-		<center><Button onClick={post} variant='contained'> upload </Button></center>
+		<center><Button onClick={post} variant='contained'> upload </Button>
+		<br /><Button onClick={()=>{ setUserPopup(true) }}> selected users </Button>
+		</center>
 		<br /><br /><br /><br />
                 </>
         )

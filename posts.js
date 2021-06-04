@@ -86,7 +86,7 @@ Story.find({postedBy:{$in: user.followings}})
 
 router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
 
-	const { caption } = req.body
+	const { caption, tags } = req.body
 
 	const model = new Post({
 		_id: new mongoose.Types.ObjectId(),
@@ -98,9 +98,16 @@ router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
 
 	model.save()
 	.then(result =>{
-		res.status(200).json({ message: 'post created successfully'})
+	Post.findByIdAndUpdate(result._id, { $push: { tags: { $each: tags }}}, { new: true })
+		.then(data =>{ 
+			res.status(200).json({ message: 'post created successfully'})
+		})
+		.catch(err =>{
+			console.log(err)
+			res.status(500).json({ message: 'server error' })
+		})
 	})
-	.catch(err =>{
+	.catch(error =>{
 		res.status(500).json({ message: 'server error' })
 		console.log(err)
 	})
