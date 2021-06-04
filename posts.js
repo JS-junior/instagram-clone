@@ -114,6 +114,23 @@ router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
 })
 
 
+router.get('/tags/:id', auth, (req,res,next)=>{
+        Post.findOne({ _id: req.params.id })
+        .then(post =>{
+                User.find({ _id: { $in: post.tags } })
+                        .then(users =>{
+                                res.status(200).json({ message: users })
+                        })
+                        .catch(err =>{
+                                res.status(500).json({ message: 'server error' })
+                        })
+        })
+        .catch(err =>{
+                res.status(500).json({ message: 'server error' })
+                console.log(err)
+        })                                                                                      })
+
+
 router.delete('/post/:id',auth,(req,res,next)=>{
 
 	Post.findByIdAndDelete(req.params.id)

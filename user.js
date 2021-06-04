@@ -7,6 +7,7 @@ const model = mongoose.Schema({
 	password: { type: String, required: true, unique: true },
 	phone_number : { type: Number, required: true },
 	photo: { type: String, required: true },
+	status: { type: String, required: true },
 	followings: [{ type: ObjectId, ref: 'User' }],
 	followers: [{ type: ObjectId, ref: 'User' }]
 })

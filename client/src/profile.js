@@ -15,7 +15,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Heart from "react-animated-heart";
 import FavoriteIcon from '@material-ui/icons/Favorite';
-
+import GroupIcon from '@material-ui/icons/Group';
+import ReactDom from 'react-dom'
 
 function Profile(){
 
@@ -24,6 +25,8 @@ function Profile(){
 	const [ open, setOpen ] = useState(false)
 	const [ user, setUser ] = useState([])
 	const [ posts, setPosts ] = useState([])
+	const [ tags, setTags ] = useState([])
+        const [ userPopup, setUserPopup ] = useState(false)
 	const [ followers, setFollowers ] = useState([])
 	const [ followings, setFollowings ] = useState([])
 	const [ comment, setComment ] = useState("")
@@ -147,10 +150,52 @@ function Profile(){
 		fetchPost()
 	},[])
 
+	const fetchTags = (id)=>{
+                        fetch(`${base_url}/tags/${id}`,{
+                                method: 'GET',
+                                headers: { authorization: 'bearer ' + token }
+                        })
+                        .then(res =>{
+                                return res.json()
+                        })
+                        .then(data =>{
+                                setTags(data.message)
+                                console.log(data.message)
+                        })
+                        .catch(err =>{
+                                console.log(err)
+                        })                                                                                      }
+
+	function UsersModal(){
+
+                return ReactDom.createPortal(
+                        <>
+                        {!userPopup ? null :
+                <div className='outer_modal'>
+                <div className='inner_modal'>
+                <Typography variant='h6'> Tagged users </Typography>
+                                <center>
+                        {tags.map((val, index)=>{
+                                return(                                                                                                 <>
+                <div className='adduser_modal'>
+                <Avatar className='adduser_modal_avatar' src={`${base_url}/${val.photo}`} />
+                <Button className='adduser_modal_username'>{val.username}</Button>
+                </div><br />
+                                        </>
+                                )
+                        })}
+                 </center>
+                <Button onClick={()=>{ setUserPopup(false) }}> close </Button>
+                </div></div>}
+
+                        </>, document.getElementById('modal')
+                )
+        }
 
         return(
                 <>
 		<Components />
+		<UsersModal />
 		<ToastContainer />
 		{!open ?
 		<SettingsIcon className='settings_icon' 
@@ -224,7 +269,7 @@ function Profile(){
                 onClick={ ()=>{ unlikePost(val._id) }}
                 className='navbar_icons'  />
                 : <Heart isClick={false}
-                onClick={ ()=>{ likePost(val._id, val.postedByy._id) }}
+                onClick={ ()=>{ likePost(val._id, val.postedBy._id) }}
                 className='navbar_icons' />
                 }
 
@@ -233,9 +278,12 @@ function Profile(){
 		className='navbar_icons' />
                 <ShareIcon className='navbar_icons' />
 		<DeleteIcon className='navbar_icons' 
-		onClick={()=>{ deletePost(val._id) }} /><br />
+		onClick={()=>{ deletePost(val._id) }} />
+		<GroupIcon className='navbar_icons'
+                onClick={()=>{ fetchTags(val._id); setUserPopup(true) }} />
+		<br />
 		<span style={{ marginLeft: '13%',fontWeight: '600'}}> {val.likes.length}</span>
-                </CardContent>
+		</CardContent>
                 </CardActionArea>                                                             
 		</Card> 
 				</>

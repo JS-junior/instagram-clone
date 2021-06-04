@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Avatar, Button, Input, Typography, Card, CardMedia, CardContent, Menu, MenuItem, CardActionArea, CardHeader } from '@material-ui/core'
 import { useParams, useHistory } from 'react-router-dom'
 import './App.css'
+import GroupIcon from '@material-ui/icons/Group';                                               import ReactDom from 'react-dom'
 import Components from './components.js'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';         
 import ShareIcon from '@material-ui/icons/Share';                                  
@@ -25,6 +26,8 @@ function User(){
 	const [ posts, setPosts ] = useState([])
 	const [ followers, setFollowers ] = useState([])
 	const [ followings, setFollowings ] = useState([])
+	const [ tags, setTags ] = useState([])
+        const [ userPopup, setUserPopup ] = useState(false)
         const logout = ()=>{ localStorage.removeItem('jwt'); history.push('/signup') }
 
 	useEffect(()=>{
@@ -56,7 +59,6 @@ function User(){
                         })
                 }
 	
-
 
 	const likePost = (uid, notify)=>{
 		fetch(`${base_url}/like`, {
@@ -179,6 +181,41 @@ function User(){
 		})
 	}
 
+	function UsersModal(){
+
+                return ReactDom.createPortal(
+                        <>                                                                                              {!userPopup ? null :
+                <div className='outer_modal'>
+                <div className='inner_modal'>
+                <Typography variant='h6'> Tagged users </Typography>
+                                <center>
+                        {tags.map((val, index)=>{
+                                return(                                                                                                 <>
+                <div className='adduser_modal'>                                                                 <Avatar className='adduser_modal_avatar' src={`${base_url}/${val.photo}`} />
+                <Button className='adduser_modal_username'>{val.username}</Button>
+                </div><br />
+                                        </>
+                                )
+                        })}
+                 </center>
+                <Button onClick={()=>{ setUserPopup(false) }}> close </Button>                                  </div></div>}
+
+                        </>, document.getElementById('modal')
+                )
+        }
+
+	const fetchTags = (uid)=>{
+                        fetch(`${base_url}/tags/${uid}`,{
+                                method: 'GET',                                                                                  headers: { authorization: 'bearer ' + token }                                           })                                                                                              .then(res =>{
+                                return res.json()
+                        })
+                        .then(data =>{                                                                                          setTags(data.message)
+                                console.log(data.message)
+                        })
+                        .catch(err =>{
+                                console.log(err)
+                        })
+                }
 
 
         useEffect(()=>{
@@ -190,6 +227,7 @@ function User(){
         return(
                 <>
 		<Components />
+		<UsersModal />
 		<ToastContainer />
 
 		<div className='appbar_profile'>
@@ -247,9 +285,13 @@ function User(){
                 <ChatRoundedIcon
                 onClick={ ()=>{ history.push(`/comments/${val._id}`)}}
                 className='navbar_icons' />
-                <ShareIcon className='navbar_icons' /><br />
+                <ShareIcon className='navbar_icons' />
+		<GroupIcon className='navbar_icons'
+                onClick={()=>{ fetchTags(val._id); setUserPopup(true) }} />
+		<br />
 		<span style={{ marginLeft: '13%',fontWeight: '600'}}> {val.likes.length}</span>
-                </CardContent>
+	
+		</CardContent>
 		</CardActionArea>
                 </Card>
                 </>

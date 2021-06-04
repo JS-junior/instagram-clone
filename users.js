@@ -59,7 +59,8 @@ router.post('/signup', upload.single('photo'),(req,res,next)=>{
 					password: hash,
 					email: email,
 					phone_number: phone_number,
-					photo: req.file.filename
+					photo: req.file.filename,
+					status: 'online'
 				})
 				model.save()
 				.then(result =>{

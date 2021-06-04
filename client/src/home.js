@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Avatar, Button, Input, Card, CardMedia, CardContent, CardHeader, CardActionArea,  AppBar, Toolbar, Typography, IconButton, Tooltip } from '@material-ui/core'
 import Menu from '@material-ui/icons/Menu'
 import Search from '@material-ui/icons/Search'
+import ReactDom from 'react-dom'
 import { useParams, useHistory } from 'react-router-dom'
 import './App.css'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -15,6 +16,7 @@ import Heart from "react-animated-heart";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { State } from './state.js'
 import { actionTypes } from './reducer.js'
+import GroupIcon from '@material-ui/icons/Group';
 import jwt_decode from 'jwt-decode'
 
 function Home(){
@@ -22,6 +24,8 @@ function Home(){
 	const [{ base_url }, dispatch ] = useContext(State)
 	const [ posts, setPosts ] = useState([])
 	const [ stories, setStories ] = useState([])
+	const [ tags, setTags ] = useState([])
+	const [ userPopup, setUserPopup ] = useState(false)
 	const [ user, setUser ] = useState("")
 	const [ isClick, setClick ] = useState(false)
 	const token = localStorage.getItem('jwt')
@@ -57,6 +61,8 @@ function Home(){
 		}
 	 },[])
 
+
+
 			const fetchPost = ()=>{
 			fetch(`${base_url}/subpost`,{
 				method: 'GET',
@@ -73,6 +79,23 @@ function Home(){
 				console.log(err)
 			})
 		}
+
+	const fetchTags = (id)=>{
+                        fetch(`${base_url}/tags/${id}`,{
+                                method: 'GET',
+                                headers: { authorization: 'bearer ' + token }
+                        })
+                        .then(res =>{
+                                return res.json()
+                        })
+                        .then(data =>{
+                                setTags(data.message)
+                                console.log(data.message)
+                        })
+                        .catch(err =>{
+                                console.log(err)
+                        })
+                }
 
 
 	useEffect(()=>{
@@ -143,9 +166,38 @@ function Home(){
                 })
         }
 
+
+	function UsersModal(){
+
+                return ReactDom.createPortal(
+                        <>
+                        {!userPopup ? null :
+                <div className='outer_modal'>
+                <div className='inner_modal'>
+                <Typography variant='h6'> Tagged users </Typography>
+                                <center>
+                        {tags.map((val, index)=>{
+                                return(
+                                        <>
+                <div className='adduser_modal'>
+                <Avatar className='adduser_modal_avatar' src={`${base_url}/${val.photo}`} />
+                <Button className='adduser_modal_username'>{val.username}</Button>
+                </div><br />
+                                        </>
+                                )
+                        })}
+                 </center>
+                <Button onClick={()=>{ setUserPopup(false) }}> close </Button>
+                </div></div>}
+
+                        </>, document.getElementById('modal')
+                )
+        }
+
 	return(
 		<>
 		<Components />
+		<UsersModal />
 		<ToastContainer />
 		<div className='appbar_home'>
 		<AddBoxIcon 
@@ -201,6 +253,9 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
                 } 
 		<ChatRoundedIcon onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
 		className='navbar_icons' />
+
+		<GroupIcon className='navbar_icons'
+		onClick={()=>{ fetchTags(val._id); setUserPopup(true) }} />
 		<ShareIcon onClick={ ()=>{ 
 		
 	if (navigator.canShare) {
