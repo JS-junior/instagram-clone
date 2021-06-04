@@ -253,3 +253,17 @@ input:focus  {
 .create_room_cross{
 	margin-left: auto;
 }
+
+.adduser_modal {
+	display: flex;
+	flex-direction: row;
+}
+
+.adduser_modal_avatar {
+	display: inline-block;
+}
+
+.adduser_modal_username {
+	display: inline-block
+}
+

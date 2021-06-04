@@ -316,9 +316,6 @@ router.put('/resetpass',(req,res,next)=>{
 	})
 })
 
-router.get('/followings',auth,(req,res,next)=>{
-	User.find()
 
-})
 
 module.exports = router 

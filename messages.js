@@ -2,6 +2,7 @@ const express = require("express")
 const mongoose = require('mongoose')
 const router = express.Router()
 const Room = require('./room.js')
+const User = require('./user.js')
 const auth = require('./auth.js')
 const path = require('path')
 const multer = require('multer')
@@ -78,7 +79,6 @@ router.post('/room',auth,upload.single('photo'),(req,res,next)=>{
 
 
 router.get('/rooms', auth, (req,res,next)=>{
-
 	Room.find()
 	.populate('createdBy', 'username photo _id')
 	.then(rooms =>{
@@ -88,6 +88,16 @@ router.get('/rooms', auth, (req,res,next)=>{
 	.catch(err =>{
 		res.status(500).json({ message: err })
 	})
+})
+
+router.delete('/room/:id', auth, (req,res,next)=>{
+        Room.findByIdAndDelete(req.params.id)
+        .then(rooms =>{
+                res.status(200).json({ message: 'room deleted' })
+        })
+        .catch(err =>{
+                res.status(500).json({ message: err })
+        })
 })
 
 router.put('/adduser/:id/:userId', auth, (req,res,next)=>{
@@ -101,12 +111,50 @@ Room.findByIdAndUpdate(req.params.id, { $push: { users: req.params.userId }}, { 
 })
 
 router.put('/removeuser/:id/:userId', auth, (req,res,next)=>{
-Room.findByIdAndUpdate(req.params.id, { $pull: { users: req.user._id }}, { new: true })
+Room.findByIdAndUpdate(req.params.id, { $pull: { users: req.params.userId }}, { new: true })
         .then(result =>{
-                res.status(200).json({ message: 'user added' })
+		if(req.params.userId !== req.user._id){
+                res.status(200).json({ message: 'user removed' })
+		} else if(req.params.userId === req.user._id){
+			res.status(200).json({ message: 'self removed' })
+	}
         })
         .catch(err =>{
                 res.status(500).json({ message: err })
+        })
+})
+
+router.get('/friends', auth, (req,res,next)=>{
+	User.findOne({ _id: req.user._id })
+        .then(user =>{
+		User.find({ _id: { $in: user.followers } })
+			.then(friends =>{
+				res.status(200).json({ message: friends })
+			})
+			.catch(err =>{
+				res.status(500).json({ message: 'server error' })
+			})
+	})
+        .catch(err =>{
+                res.status(500).json({ message: 'server error' })
+                console.log(err)
+        })
+})
+
+router.get('/users/:id', auth, (req,res,next)=>{
+        Room.findOne({ _id: req.params.id })
+        .then(room =>{
+                User.find({ _id: { $in: room.users } })
+                        .then(friends =>{
+                                res.status(200).json({ message: friends })
+                        })
+                        .catch(err =>{
+                                res.status(500).json({ message: 'server error' })
+                        })
+        })
+        .catch(err =>{
+                res.status(500).json({ message: 'server error' })
+                console.log(err)
         })
 })
 
