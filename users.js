@@ -237,6 +237,16 @@ router.put('/updatename',auth,(req,res,next)=>{
     })
 })
 
+router.put('/status',auth,(req,res,next)=>{
+    User.findByIdAndUpdate(req.user._id,{$set:{status: req.body.status}},{new:true},
+        (err,result)=>{
+         if(err){
+             return res.status(422).json({ message: "server error" })
+         }
+         res.status(200).json({ message: 'username updated' })
+    })
+})
+
 router.put('/updatemail',auth,(req,res,next)=>{
     User.findByIdAndUpdate(req.user._id,{$set:{email: req.body.email}},{new:true},
         (err,result)=>{
