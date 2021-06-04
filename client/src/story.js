@@ -13,19 +13,10 @@ function Story(){
 	const { id } = useParams()
 	const token = localStorage.getItem('jwt')
 	const user_id = jwt_decode(token)
-	const [ stories, setStories ] = useState([])
+	const [ stories, setStories ] = useState([{ url:
+		'https://images.unsplash.com/photo-1536104968055-4d61aa56f46a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxODMzMTd8MHwxfHNlYXJjaHwyfHxDb2Rpbmd8ZW58MHwyfHx8MTYyMjM4MTQ5OQ&ixlib=rb-1.2.1&q=80&w=1080', profileImage: 'http://localhost:8080/2021-06-04T12:54:48.357Zimages (5).jpeg'}])
 	const [{ base_url }, dispatch ] = useContext(State)
 	const [ user, setUser ] = useState([])
-
-	const files = [
-		'https://images.unsplash.com/photo-1536104968055-4d61aa56f46a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxODMzMTd8MHwxfHNlYXJjaHwyfHxDb2Rpbmd8ZW58MHwyfHx8MTYyMjM4MTQ5OQ&ixlib=rb-1.2.1&q=80&w=1080',
-		'https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxODMzMTd8MHwxfHNlYXJjaHwxfHxDb2Rpbmd8ZW58MHwyfHx8MTYyMjM4MTQ5OQ&ixlib=rb-1.2.1&q=80&w=1080',
-		'https://images.unsplash.com/photo-1493119508027-2b584f234d6c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxODMzMTd8MHwxfHNlYXJjaHw1fHxDb2Rpbmd8ZW58MHwyfHx8MTYyMjM4MTQ5OQ&ixlib=rb-1.2.1&q=80&w=1080',
-		'https://images.unsplash.com/photo-1577375729152-4c8b5fcda381?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxODMzMTd8MHwxfHNlYXJjaHw0fHxDb2Rpbmd8ZW58MHwyfHx8MTYyMjM4MTQ5OQ&ixlib=rb-1.2.1&q=80&w=1080',{
-			url: 'http://www.sololearn.com/uploads/video.ogg',
-			type: 'video'
-		}
-	]
 
 
 	useEffect(()=>{
@@ -56,7 +47,7 @@ function Story(){
 	
 		
 		<Stories
-			stories={files}
+			stories={stories}
 			defaultInterval={1500}
 			width={432}
 			height={768}

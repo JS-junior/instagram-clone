@@ -51,6 +51,19 @@ router.put('/messages',auth,(req,res,next)=>{
 	})
 })
 
+router.delete('/messages/:id/:messageId',auth,(req,res,next)=>{
+
+Room.findByIdAndUpdate(req.params.id, { $pull: { messages: { _id:  req.params.messageId }}},{ new: true })
+        .then(result =>{
+                res.status(200).json({ message: result  })
+        })
+        .catch(err =>{
+
+                console.log(err)
+                res.status(500).json({ message:  err })
+        })
+})
+
 router.post('/room',auth,upload.single('photo'),(req,res,next)=>{
 
 	const room = {

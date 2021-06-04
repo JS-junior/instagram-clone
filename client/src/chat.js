@@ -281,6 +281,22 @@ function Chat(){
 		})
 	}
 
+	const deleteMessage = (id)=>{
+		fetch(`${base_url}/messages/${room}/${id}`, {
+			method: 'DELETE',
+			headers: { authorization: 'bearer ' + token }
+		})
+		.then(res =>{
+			return res.json()
+		})
+		.then(data =>{
+			fetchRoom()
+		})
+		.catch(err =>{
+			console.log(err)
+		})
+	}
+
 	
 	return(
 		<>
@@ -329,7 +345,8 @@ function Chat(){
 
 		{val.name === decoded.username ?
 		<>
-		<p className='chat_message_receive' key={index} id={index}>
+		<p className='chat_message_receive' key={index} id={index}
+		onDoubleClick={()=>{ deleteMessage(val._id) }}>
                 <span className='chat_name'> You  </span> {val.text}
                 <span className='chat_timestamp'> 11:50</span></p> </>
 			:

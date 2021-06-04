@@ -182,7 +182,8 @@ router.put('/comment',auth,(req,res,next)=>{
 })
 
 router.get('/story/:id',auth,(req,res,next)=>{
-	Story.find({ postedBy: req.user._id })
+	Story.find({ postedBy: req.params.id })
+	.select('url profileImage')
 	.populate('postedBy', 'username _id photo')
 	.then(result =>{
 		res.status(200).json({ message: result })
