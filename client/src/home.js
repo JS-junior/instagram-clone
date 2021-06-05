@@ -251,7 +251,7 @@ src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.co
                 onClick={ ()=>{ likePost(val._id, val.postedBy._id) }}
                 className='navbar_icons' />
                 } 
-		<ChatRoundedIcon onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
+<ChatRoundedIcon onClick={ ()=>{ history.push(`/comments/${val._id}/${val.postedBy._id}`) }}
 		className='navbar_icons' />
 
 		<GroupIcon className='navbar_icons'

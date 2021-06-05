@@ -274,7 +274,7 @@ function Profile(){
                 }
 
                 <ChatRoundedIcon 
-		onClick={ ()=>{ history.push(`/comments/${val._id}`) }}
+		onClick={ ()=>{ history.push(`/comments/${val._id}/${val.postedBy._id}`) }}
 		className='navbar_icons' />
                 <ShareIcon className='navbar_icons' />
 		<DeleteIcon className='navbar_icons' 

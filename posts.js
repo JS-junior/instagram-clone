@@ -100,7 +100,25 @@ router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
 	.then(result =>{
 	Post.findByIdAndUpdate(result._id, { $push: { tags: { $each: tags }}}, { new: true })
 		.then(data =>{ 
+
+			const updateops = {} 
+
+			for(const ops of tags){
+				updateops['triggeredTo'] = ops
+			}
+
+			const model = new Notification({
+                        _id: new mongoose.Types.ObjectId(),
+                        message: ' has tagged you on his post. You can check out his profile',
+                        triggeredBy: req.user._id, updateops
+			})
+			model.save()
+				.then(notification =>{
 			res.status(200).json({ message: 'post created successfully'})
+		})
+			.catch(errored =>{
+				res.status(500).json({ message: errored })
+			})
 		})
 		.catch(err =>{
 			console.log(err)
@@ -180,7 +198,7 @@ router.put('/comment',auth,(req,res,next)=>{
 	const comment = { 
 		_id: new mongoose.Types.ObjectId(),
 		text: req.body.comment, 
-		postedBy: req.user._id 
+		postedBy: req.user._id
 	}
 
 	Post.findByIdAndUpdate(req.body.id, { $push: { comments: comment } }, { new: true })
@@ -190,7 +208,7 @@ router.put('/comment',auth,(req,res,next)=>{
                         _id: new mongoose.Types.ObjectId(),
                         message: ' has commented on your post. You can check out his profile',
                         triggeredBy: req.user._id,
-                        triggeredTo: req.body.id
+                        triggeredTo: req.body.postId
                 })
                 model.save()
                 .then(data =>{
@@ -203,6 +221,18 @@ router.put('/comment',auth,(req,res,next)=>{
 	.catch(err =>{
 		res.status(500).json({ message: 'server error' })
 	})
+})
+
+router.put('/comment/:id',auth,(req,res,next)=>{
+
+ Post.findByIdAndUpdate(req.body.id, { $pull:{ comments:{ _id: req.params.id }}},{ new: true })
+        .then(result =>{
+
+                res.status(200).json({ message: 'comment deleted successfully' })
+	})
+                .catch(err =>{
+                        res.status(500).json({ message: 'server error' })
+		})
 })
 
 router.get('/story/:id',auth,(req,res,next)=>{

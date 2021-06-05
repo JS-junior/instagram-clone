@@ -34,7 +34,7 @@ function App() {
 	  <Route path='/signup' component={Signup} />
 	  <Route path='/login' component={Login} />
 	  <Route path='/notifications' component={Notify} />
-	  <Route path='/comments/:id' component={Comments} />
+	  <Route path='/comments/:id/:postId' component={Comments} />
 	  <Route path='/story/:id' component={Story} />
 	  <Route path='/createstory' component={CreateStory} />
 	  <Route path='/edit/:id' component={Edit} />

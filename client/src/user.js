@@ -283,7 +283,7 @@ function User(){
                 className='navbar_icons' />
                 }
                 <ChatRoundedIcon
-                onClick={ ()=>{ history.push(`/comments/${val._id}`)}}
+                onClick={ ()=>{ history.push(`/comments/${val._id}/${val.postedBy._id}`)}}
                 className='navbar_icons' />
                 <ShareIcon className='navbar_icons' />
 		<GroupIcon className='navbar_icons'
