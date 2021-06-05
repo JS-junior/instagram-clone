@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import logo from './logo.svg'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { State } from './state.js'
+import { database } from './firebase.js'
 import './App.css'
 import Home from './home.js'
 import Search from './search.js'
@@ -21,7 +23,35 @@ import Comments from './comments.js'
 
 function App() {
 
+	const [{ base_url }, dispatch ] = useContext(State)
+	const token = localStorage.getItem('jwt')
+/*
+	useEffect(()=>{
+	var connectedRef = database.ref(".info/connected");
+                connectedRef.on("value", (snap) => {
+                        if (snap.val() === true) {
+                                console.log("connected");
 
+                fetch(`${base_url}/status`,{
+                        method: 'PUT',
+                        headers: {
+                                authorization: 'bearer ' + token,                                                               'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({ status: 'online' })
+                })
+                .then(res =>{
+                        return res.json()
+                })
+                .then(data =>{
+                        console.log(data)
+		})
+                .catch(err =>{
+                        console.log(err)
+                })                                                                                                      } else {                                                                                                console.log('user is offline')                                                          }
+                })
+	},[navigator.onLine])
+
+*/
   return (
 	  <>
 <BrowserRouter>

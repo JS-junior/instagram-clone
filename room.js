@@ -11,7 +11,7 @@ const model = mongoose.Schema({
 	name: { type: String },
 	text: { type: String },
 	isReceived: { type: Boolean },
-	timestamp: { type: Date  }
+	timestamp: { type: String  }
 	}]
 })
 

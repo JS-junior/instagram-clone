@@ -53,10 +53,12 @@ io.on('connection', (socket)=>{
 
 	socket.on('disconnect',()=>{
 		console.log(users)
-		const lastOnline = new Date().getHours + ':' + new Date().getMinutes()
+		const lastOnline = new Date().getHours() + ':' + new Date().getMinutes()
 User.findByIdAndUpdate(users[socket.id],{$set:{status:'last seen at '+ lastOnline}},{new:true })
 		.then(result =>{
 			delete user[socket.id]
+
+			console.log(user[socket.id] + 'is offline')
 		})
 		.catch(err =>{
 			console.log(err)

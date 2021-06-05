@@ -36,7 +36,7 @@ router.put('/messages',auth,(req,res,next)=>{
 		_id: new mongoose.Types.ObjectId(),
 		name: req.user.username,
 		text: req.body.text,
-		timestamp: new Date().toUTCString(),
+		timestamp: new Date().getHours() + ':' + new Date().getMinutes(),
 		isReceived: false
 	}
 	

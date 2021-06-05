@@ -409,12 +409,12 @@ function Chat(){
 		<p className='chat_message_receive' key={index} id={index}
 		onDoubleClick={()=>{ deleteMessage(val._id) }}>
                 <span className='chat_name'> You  </span> {val.text}
-                <span className='chat_timestamp'> 11:50</span></p> </>
+                <span className='chat_timestamp'> {val.timestamp}</span></p> </>
 			:
 		<>
                 <p className='chat_message' key={index} id={index}>
                 <span className='chat_name'> {val.name} </span> {val.text}
-                <span className='chat_timestamp'> 11:50</span></p>
+                <span className='chat_timestamp'> {val.timestamp}</span></p>
 		
 		
                 </>}
