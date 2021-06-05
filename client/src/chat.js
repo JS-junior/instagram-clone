@@ -344,26 +344,8 @@ function Chat(){
                 .catch(err =>{
                         console.log(err)                                                                        })
 			} else {
-				fetch(`${base_url}/status`,{
-                        method: 'PUT',
-                        headers: {                                                                                              authorization: 'bearer ' + token,
-                                'Content-Type':'application/json'
-                        },
-                        body: JSON.stringify({ status: 'offline' })
-                })
-                .then(res =>{
-                        return res.json()
-                })
-                .then(data =>{
-                        console.log(data)
-                        setReply("")
-                        fetchRoom()
-                })
-                .catch(err =>{
-                        console.log(err)
-                })
-
-	}
+				console.log('user is offline')
+			}
 		})
 	}
 
