@@ -37,7 +37,7 @@ const io = require('socket.io')(server)
 io.on('connection', (socket)=>{
 
 	socket.on('user-connected', ({ username, id })=>{
-		users[id] = username
+		users[socket.id] = id
 		socket.broadcast.emit('user-joined', { message: username })
 	})
 
@@ -53,7 +53,8 @@ io.on('connection', (socket)=>{
 	})
 
 	socket.on('disconnect',()=>{
-		User.findByIdAndUpdate(users[id], {$set: {status: 'offline'}}, { new: true })
+		console.log(users)
+	User.findByIdAndUpdate(users[socket.id], {$set: {status: 'offline'}}, { new: true })
 		.then(result =>{
 			console.log('success')
 		})

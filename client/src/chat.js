@@ -51,7 +51,6 @@ function Chat(){
 		socket.emit('user-connected', { username: decoded.username, id: decoded._id })
 		socket.on('user-joined',
 		({ message })=>{ console.log('New user connected to socket.io ' + message) })
-
 	})
 
 	const fetchRoom = ()=>{
