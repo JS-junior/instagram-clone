@@ -243,7 +243,7 @@ router.put('/status',auth,(req,res,next)=>{
          if(err){
              return res.status(422).json({ message: "server error" })
          }
-         res.status(200).json({ message: 'username updated' })
+         res.status(200).json({ message: 'status updated' })
     })
 })
 

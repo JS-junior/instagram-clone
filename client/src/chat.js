@@ -12,6 +12,10 @@ import { State } from './state.js'
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import { toast, ToastContainer } from 'react-toastify'
+import * as Ably from "ably";
+import { Doughnut } from "react-chartjs-2";
+import { db, database, storage }  from './firebase.js'
+import FlipMove from 'react-flip-move'
 import './App.css'
 
 function Chat(){
@@ -259,6 +263,9 @@ function Chat(){
                         </>, document.getElementById('modal')
                 )                                                                                       }
 
+
+
+
 	const deletegroup = ()=>{
 		fetch(`${base_url}/room/${room}`,{
 			method: 'DELETE',
@@ -297,7 +304,62 @@ function Chat(){
 		})
 	}
 
-	
+
+	const updateStatus = ()=>{
+
+		var connectedRef = database.ref(".info/connected");
+		connectedRef.on("value", (snap) => {
+			if (snap.val() === true) {
+				console.log("connected");
+		fetch(`${base_url}/status`,{
+                        method: 'PUT',
+                        headers: {
+                                authorization: 'bearer ' + token,
+                                'Content-Type':'application/json'
+                        },
+			body: JSON.stringify({ status: 'online' })
+                })
+                .then(res =>{
+                        return res.json()
+                })
+                .then(data =>{
+                        console.log(data)
+                        setReply("")
+                        fetchRoom()
+                })
+                .catch(err =>{
+                        console.log(err)                                                                        })
+			} else {
+				fetch(`${base_url}/status`,{
+                        method: 'PUT',
+                        headers: {                                                                                              authorization: 'bearer ' + token,
+                                'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({ status: 'offline' })
+                })
+                .then(res =>{
+                        return res.json()
+                })
+                .then(data =>{
+                        console.log(data)
+                        setReply("")
+                        fetchRoom()
+                })
+                .catch(err =>{
+                        console.log(err)
+                })
+
+	}
+		})
+	}
+
+
+	useEffect(()=>{
+		updateStatus()
+	},[navigator.onLine])
+
+
+
 	return(
 		<>
 		<ToastContainer />
@@ -339,6 +401,7 @@ function Chat(){
 		</div>
 		
 		<div className='chat_body'>
+	
 		{chat.map((val, index)=>{
 			return(
 				<>
@@ -361,6 +424,7 @@ function Chat(){
 				</>
 			)
 		})}
+	
 		</div>
 		
 		<div className='chat_footer'> 
