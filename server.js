@@ -22,7 +22,6 @@ changeStream.on('change',(change)=>{
 		const mainField = field[0]
 		console.log('This is change stream data \n \n \n')
 		console.log(change.updateDescription.updatedFields.mainField)
-	
 
         } else {
 		
@@ -56,7 +55,15 @@ io.on('connection', (socket)=>{
 		console.log(users)
 	User.findByIdAndUpdate(users[socket.id], {$set: {status: 'offline'}}, { new: true })
 		.then(result =>{
-			console.log('success')
+
+			const lastOnline = new Date().getHours + new Date().getMinutes()
+User.findByIdAndUpdate(users[socket.id], {$set: {lastOnline: lastOnline }}, { new: true })
+                .then(result =>{
+
+                })
+                .catch(err =>{
+                        console.log(err)
+                })
 		})
 		.catch(err =>{
 			console.log(err)
