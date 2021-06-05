@@ -41,7 +41,7 @@ io.on('connection', (socket)=>{
 		socket.broadcast.emit('user-joined', { message: username })
 	})
 
-	socket.on('chat-message', ({ id })=>{
+	socket.on('chat-messages', ({ id })=>{
 		Room.findById(id)
 		.populate('createdBy', 'username photo _id')
 		.then(result =>{

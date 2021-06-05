@@ -44,13 +44,16 @@ function Chat(){
         block: "start",
         });
     }
-	useEffect(()=>{
 
-		
+
+
+	useEffect(()=>{	
 		const socket = socketIOClient(base_url,  { transports: ["websocket"] })
 		socket.emit('user-connected', { username: decoded.username, id: decoded._id })
 		socket.on('user-joined',
 		({ message })=>{ console.log('New user connected to socket.io ' + message) })
+		socket.emit('chat-messages', { id: room })
+                socket.on('receive-chat-message', ({ message })=>{ console.log(message) })
 	})
 
 	const fetchRoom = ()=>{
@@ -89,10 +92,6 @@ function Chat(){
 	}
 
 	useEffect(()=>{
-		fetchRoom()
-	},[])
-
-	useEffect(()=>{
 		fetch(`${base_url}/friends`,{
                                 headers: {
                                         authorization: 'bearer ' + token
@@ -110,6 +109,7 @@ function Chat(){
 	},[])
 
 	useEffect(()=>{
+		fetchRoom()
 		fetchUsers()
 	},[])
 
