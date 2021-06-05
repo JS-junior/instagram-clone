@@ -18,8 +18,10 @@ changeStream.on('change',(change)=>{
 
         if(change.operationType === 'update'){
                 const user = change.updateDescription.updatedFields
+		const field = Object.keys(user)
+		const mainField = field[0]
 		console.log('This is change stream data \n \n \n')
-		console.log(user) 
+		console.log(change.updateDescription.updatedFields.mainField)
 	
 
         } else {
@@ -30,6 +32,35 @@ changeStream.on('change',(change)=>{
 })
 
 const server = http.createServer(app)
+const io = require('socket.io')(server)
 
+io.on('connection', (socket)=>{
+
+	socket.on('user-connected', ({ username, id })=>{
+		users[id] = username
+		socket.broadcast.emit('user-joined', { message: username })
+	})
+
+	socket.on('chat-message', ({ id })=>{
+		Room.findById(id)
+		.populate('createdBy', 'username photo _id')
+		.then(result =>{
+			io.sockets.emit('receive-chat-message', { message: result })
+		})
+		.catch(err =>{
+			console.log(err)
+		})
+	})
+
+	socket.on('disconnect',()=>{
+		User.findByIdAndUpdate(users[id], {$set: {status: 'offline'}}, { new: true })
+		.then(result =>{
+			console.log('success')
+		})
+		.catch(err =>{
+			console.log(err)
+		})
+	})
+})
 
 server.listen(process.env.PORT || 8080)

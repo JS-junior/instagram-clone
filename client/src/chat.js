@@ -15,7 +15,9 @@ import { toast, ToastContainer } from 'react-toastify'
 import * as Ably from "ably";
 import { Doughnut } from "react-chartjs-2";
 import { db, database, storage }  from './firebase.js'
+import firebase from 'firebase'
 import FlipMove from 'react-flip-move'
+import socketIOClient from 'socket.io-client'
 import './App.css'
 
 function Chat(){
@@ -32,6 +34,7 @@ function Chat(){
 	const bottomRef = useRef();
 	const [ open, setOpen ] = useState(false)
 	const [ rm, setRm ] = useState(false)
+	const [ snapshot  ,setSnapshot ] = useState({})
 	const [ userPopup, setUserPopup ] = useState(false)
 	const [ roomusers, setRoomUsers ] = useState([])
 	const [ menubar, setMenuBar ] = useState(false)
@@ -41,6 +44,15 @@ function Chat(){
         block: "start",
         });
     }
+	useEffect(()=>{
+
+		
+		const socket = socketIOClient(base_url,  { transports: ["websocket"] })
+		socket.emit('user-connected', { username: decoded.username, id: decoded._id })
+		socket.on('user-joined',
+		({ message })=>{ console.log('New user connected to socket.io ' + message) })
+
+	})
 
 	const fetchRoom = ()=>{
 		fetch(`${base_url}/messages/${room}`, {
@@ -252,10 +264,12 @@ function Chat(){
 			<div className='adduser_modal'>
                 <Avatar className='adduser_modal_avatar' src={`${base_url}/${val.photo}`} />
                 <Button className='adduser_modal_username'>{val.username}</Button>
+		<Button className='adduser_modal_username'>{val.status}</Button>
                 </div><br />
 					</>
 				)
 			})}
+
                                 </center>
 		<Button onClick={()=>{ setUserPopup(false) }}> close </Button>
                 </div></div>}
@@ -311,6 +325,7 @@ function Chat(){
 		connectedRef.on("value", (snap) => {
 			if (snap.val() === true) {
 				console.log("connected");
+
 		fetch(`${base_url}/status`,{
                         method: 'PUT',
                         headers: {
@@ -352,6 +367,8 @@ function Chat(){
 	}
 		})
 	}
+
+
 
 
 	useEffect(()=>{
