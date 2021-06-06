@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import logo from './logo.svg'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import socketIOClient from 'socket.io-client'
+import jwt_decode from 'jwt-decode'
 import { State } from './state.js'
-import { database } from './firebase.js'
+import { database, messaging } from './firebase.js'
 import './App.css'
 import Home from './home.js'
 import Search from './search.js'
@@ -25,7 +27,15 @@ function App() {
 
 	const [{ base_url }, dispatch ] = useContext(State)
 	const token = localStorage.getItem('jwt')
-/*
+	const decoded = jwt_decode(token)
+
+	useEffect(()=>{
+                const socket = socketIOClient(base_url,  { transports: ["websocket"] })
+                socket.emit('user-connected', { username: decoded.username, id: decoded._id })
+                socket.on('user-joined',
+                ({ message })=>{ console.log('New user connected to socket.io ' + message) })
+        })
+
 	useEffect(()=>{
 	var connectedRef = database.ref(".info/connected");
                 connectedRef.on("value", (snap) => {
@@ -44,6 +54,7 @@ function App() {
                 })
                 .then(data =>{
                         console.log(data)
+
 		})
                 .catch(err =>{
                         console.log(err)
@@ -51,7 +62,7 @@ function App() {
                 })
 	},[navigator.onLine])
 
-*/
+
   return (
 	  <>
 <BrowserRouter>

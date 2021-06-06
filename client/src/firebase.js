@@ -17,5 +17,16 @@ var firebaseConfig = {
 const db = firebase.firestore()
 const database = firebase.database()
 const storage = firebase.storage()
+const messaging = firebase.messaging()
 
-export { db, database, storage }
+/*messaging.setBackgroundMessageHandler(payload =>{
+
+	const title = 'Hello  world'
+	const options = {
+		body: payload.data.status
+	}
+
+//	return self.registration.showNotification(title, options)
+})*/
+
+export { db, database, storage, messaging }

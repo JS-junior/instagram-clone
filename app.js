@@ -9,6 +9,7 @@ const posts = require('./posts.js')
 const messages = require('./messages.js')
 const server = require('http').createServer(app)
 const db = mongoose.connection
+const fetch = require("node-fetch")
 
 app.use(bp.urlencoded({ extended: false }))
 app.use(bp.json())
@@ -26,5 +27,6 @@ mongoose.connect(`mongodb+srv://hitartha:H6pnk72QnpWR8zqj@cluster0.2vlug.mongodb
 .then(()=>{ console.log("db connected") })
 .catch((err)=>{ console.log("failed to connect db" + err) })
 
-//server.listen(8080)
+
+
 module.exports = app

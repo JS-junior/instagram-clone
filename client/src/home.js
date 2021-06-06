@@ -16,6 +16,7 @@ import Heart from "react-animated-heart";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { State } from './state.js'
 import { actionTypes } from './reducer.js'
+import { messaging } from './firebase.js'
 import GroupIcon from '@material-ui/icons/Group';
 import jwt_decode from 'jwt-decode'
 
@@ -37,7 +38,6 @@ function Home(){
 		if(!token){
 			history.push('/login')
 		} else {
-
 			fetchPost()
 			fetch(`${base_url}/user/${user_id._id}`,{
                                 method: 'GET',
@@ -49,15 +49,11 @@ function Home(){
                         .then(data =>{
                                 setUser(data.message.username)
                                 console.log(data.message)
-
-				dispatch({
-					type: actionTypes.SET_USERNAME,
-					username: user
-				})
-                        })
-                        .catch(err =>{
+			})
+			.catch(err =>{
                                 console.log(err)
                         })
+                
 		}
 	 },[])
 

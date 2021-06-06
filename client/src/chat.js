@@ -54,6 +54,11 @@ function Chat(){
 		({ message })=>{ console.log('New user connected to socket.io ' + message) })
 		socket.emit('chat-messages', { id: room })
                 socket.on('receive-chat-message', ({ message })=>{ console.log(message) })
+		socket.emit('cbat-messages', { id: room })
+	/*	socket.on('receive-chat-message', ({ message }) =>{ 
+			setUser(message.user)
+			setChat(message.messages)
+		}) */
 	})
 
 	const fetchRoom = ()=>{
