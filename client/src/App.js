@@ -20,6 +20,7 @@ import Edit from './edit.js'
 import CreateStory from './createstory.js'
 import Chat from './chat.js'
 import Rooms from './room.js'
+import VideoCall from './video.js'
 import Verify from './verify.js'
 import Comments from './comments.js'
 
@@ -82,6 +83,7 @@ function App() {
 	  <Route path='/chat/:creator/:room' component={Chat} />
 	  <Route path='/room/:id' component={Rooms} />
 	  <Route path='/verify/:id' component={Verify} />
+	  <Route path='/video/:id' component={VideoCall} />
 	  <Route component={Error} />
 	  </Switch>
 </BrowserRouter>

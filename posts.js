@@ -104,13 +104,13 @@ router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
 			const updateops = {} 
 
 			for(const ops of tags){
-				updateops['triggeredTo'] = ops
-			}
+				
 
 			const model = new Notification({
                         _id: new mongoose.Types.ObjectId(),
                         message: ' has tagged you on his post. You can check out his profile',
-                        triggeredBy: req.user._id, updateops
+                        triggeredBy: req.user._id, 
+			triggeredTo: ops
 			})
 			model.save()
 				.then(notification =>{
@@ -119,6 +119,9 @@ router.post('/post',upload.single('photo'),auth,(req,res,next)=>{
 			.catch(errored =>{
 				res.status(500).json({ message: errored })
 			})
+
+			}
+
 		})
 		.catch(err =>{
 			console.log(err)
