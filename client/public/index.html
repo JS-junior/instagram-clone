@@ -57,13 +57,43 @@
     -->
   </body>
   <script>
+
+const KEY = 'BNoAY4FHCfjkHIQFZi0xkz20rdLJwCvSOK2YUI2kNpwGmup0RJ51g2NGj_utoj0JeNip6cvkz4NrBuM5Cml8hgI'
           if('serviceWorker' in navigator){
                 window.addEventListener('load',()=>{
-				 navigator.serviceWorker.register('./worker.js')
-			.then((reg)=>{ //alert('success')
+				  send().catch(err => console.log('error registering worker'))
+			  })
+		    }
+
+	async function send(){
+	const register =  await navigator.serviceWorker.register('./worker.js',{ scope:  '/' })
+	const subscription = await register.pushManager.subscribe({
+					  userVisibleOnly: true,
+					  applicationServerKey: urlBase64ToUint8Array(KEY)
 				  })
-                        .catch(err =>{ alert(err)})
-                                          }) 
-                                    }
+
+		await fetch('http://localhost:8080/notification',{
+				  method: 'POST',
+				   headers: {
+				'Content-Type': 'application/json' },
+				  body: JSON.stringify(subscription)
+				    })
+			 .then(res =>{ return res.json(); console.log('yeah boy') })
+			  .catch(err => console.log(err))
+                            
+
+
+	  function urlBase64ToUint8Array(base64String) {
+                        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                          const base64 = (base64String + padding)
+                            .replace(/-/g, '+')
+                             .replace(/_/g, '/');
+                          const rawData = window.atob(base64)                                                             const outputArray = new Uint8Array(rawData.length);
+                          for (let i = 0; i < rawData.length; ++i) {
+                                      outputArray[i] = rawData.charCodeAt(i);
+                                 }
+                         return outputArray;                                                                     }
+
+	  }
                   </script>
 </html>

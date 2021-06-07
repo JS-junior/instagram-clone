@@ -17,7 +17,7 @@ io.on('connection', (socket)=>{
 
 	socket.on('user-connected', ({ username, id })=>{
 		users[socket.id] = id
-		socket.broadcast.emit('user-joined', { message: username })
+		socket.broadcast.emit('user-joined', { message: socket.id })
 	})
 
 	socket.on('chat-messages', ({ id })=>{

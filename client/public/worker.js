@@ -41,4 +41,10 @@ self.addEventListener('activate', (event) => {
         ))
             
     )
-});
+})
+
+self.addEventListener('push', e =>{
+	data = e.data.json()
+
+	self.registration.showNotification(data, { body: 'it works', icon: 'instagram.jpeg' })
+})
