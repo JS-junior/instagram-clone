@@ -30,14 +30,28 @@ router.get('/messages/:id',auth,(req,res,next)=>{
 	})
 })
 
-router.put('/messages',auth,(req,res,next)=>{
+router.put('/messages',upload.single('photo'),auth,(req,res,next)=>{
 
-	const message = {
+	let message;
+
+	if(!req.file){
+	 message = {
 		_id: new mongoose.Types.ObjectId(),
 		name: req.user.username,
 		text: req.body.text,
 		timestamp: new Date().getHours() + ':' + new Date().getMinutes(),
-		isReceived: false
+		isReceived: false,
+		 type: 'text'
+	}
+	} else if(!req.body.text){
+		message = {
+                _id: new mongoose.Types.ObjectId(),
+                name: req.user.username,
+                photo: req.file.filename,
+                timestamp: new Date().getHours() + ':' + new Date().getMinutes(),
+                isReceived: false,
+		type: 'image'
+        }
 	}
 	
 	Room.findByIdAndUpdate(req.body.id, { $push: { messages: message } },{ new: true })

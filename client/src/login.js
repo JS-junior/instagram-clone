@@ -50,8 +50,7 @@ function Login(){
 		<center>
                 <Typography variant='subtitle3'> India </Typography> <br />
                 <img
-src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token
-=076d4f57-316e-4bf8-a072-31c0db80cf8b'
+src='https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/Instagram-Logo.png?alt=media&token=076d4f57-316e-4bf8-a072-31c0db80cf8b'
 style={{ height: 'auto', width: '50%' }}
                 />
 

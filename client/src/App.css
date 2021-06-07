@@ -129,7 +129,7 @@ input:focus  {
 	position: fixed;
 	top: 35%;
 	left: 50%;
-	height: 40vh;
+	height: 45vh;
 	width: 90%;
 	transform: translate(-50%, -50%);
 	background-color: white;

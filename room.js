@@ -10,8 +10,10 @@ const model = mongoose.Schema({
 	_id: mongoose.Schema.Types.ObjectId,
 	name: { type: String },
 	text: { type: String },
+	photo: { type: String },
 	isReceived: { type: Boolean },
-	timestamp: { type: String  }
+	timestamp: { type: String  },
+	type: { type: String }
 	}]
 })
 

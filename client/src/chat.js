@@ -34,17 +34,19 @@ function Chat(){
 	const bottomRef = useRef();
 	const [ open, setOpen ] = useState(false)
 	const [ rm, setRm ] = useState(false)
+	const [ photo, setPhoto ] = useState({})
+	const [ photoModal, setPhotoModal ] = useState(false)
 	const [ snapshot  ,setSnapshot ] = useState({})
 	const [ userPopup, setUserPopup ] = useState(false)
 	const [ roomusers, setRoomUsers ] = useState([])
 	const [ menubar, setMenuBar ] = useState(false)
+	const fileInput = useRef()
 	const scrollToBottom = () => {
         bottomRef.current.scrollIntoView({
         behavior: "smooth",
         block: "start",
         });
     }
-
 
 
 	useEffect(()=>{	
@@ -118,6 +120,13 @@ function Chat(){
 		fetchUsers()
 	},[])
 
+	const loadFile = function(event) {
+		const reader = new FileReader();                                                                reader.onload = function(){ 
+			fileInput.current.src = reader.result;
+		}
+		reader.readAsDataURL(event.target.files[0]);                                                    setPhoto(event.target.files[0])
+	}
+
 	const sendMessage = ()=>{
 		
 		fetch(`${base_url}/messages`,{
@@ -140,6 +149,32 @@ function Chat(){
 			console.log(err)
 		})
 	}
+
+	const sendPhotoMessage = ()=>{
+
+		const form = new FormData()
+		form.append('photo', photo)
+		form.append('id', room)
+
+                fetch(`${base_url}/messages`,{
+                        method: 'PUT',
+                        headers: {
+                                authorization: 'bearer ' + token  }, 
+			body: form
+                })
+                .then(res =>{                                                                                           return res.json()
+                })
+                .then(data =>{
+                        console.log(data)
+			setPhoto({})
+			setPhotoModal(false)
+			fetchRoom()
+		}) 
+			.catch(err =>{ 
+				console.log(err)
+			toast.error('an error occured')
+			})                                                                                      }
+
 
 	const adduser = (id)=>{
 		fetch(`${base_url}/adduser/${room}/${id}`,{
@@ -193,6 +228,26 @@ function Chat(){
                 })
         }
 
+	function PhotoMessageModal(){
+
+                return ReactDom.createPortal(
+                        <>
+                        {!photoModal? null :
+		<div className='outer_modal'>
+                <div className='inner_modal'>
+                <Typography variant='h6'> Add your friends</Typography>
+                                <center>
+		<Button component='label'> Choose pic
+		<input type='file' onChange={loadFile} hidden /></Button>
+		<img ref={fileInput} style={{ height: 'auto', width: '70%' }} /><br />
+		<Button onClick={sendPhotoMessage}> send </Button>
+                                </center>
+                <Button onClick={()=>{ setPhotoModal(false) }}> close </Button>
+                </div></div>
+                }
+                        </>, document.getElementById('modal')
+                )
+        }
 
 	function AddUserModal(){
 
@@ -222,6 +277,7 @@ function Chat(){
 			</>, document.getElementById('modal')
 		)
 	}
+
 				
 	function RemoveUserModal(){
 
@@ -370,6 +426,7 @@ function Chat(){
 		<AddUserModal />
 		<RemoveUserModal />
 		<UsersModal />
+		<PhotoMessageModal />
 		<div className='chat_header'>
 		<Avatar src={`${base_url}/${user.photo}`}/>
 		<div className='chat_header_info'>
@@ -413,17 +470,19 @@ function Chat(){
 		<>
 		<p className='chat_message_receive' key={index} id={index}
 		onDoubleClick={()=>{ deleteMessage(val._id) }}>
-                <span className='chat_name'> You  </span> {val.text}
+                <span className='chat_name'> You  </span> {val.type === "image" ?
+<img src={`${base_url}/${val.photo}`} style={{ height:'auto',width:'80%'}} />:
+			<span>{val.text}</span>}
                 <span className='chat_timestamp'> {val.timestamp}</span></p> </>
 			:
 		<>
                 <p className='chat_message' key={index} id={index}>
-                <span className='chat_name'> {val.name} </span> {val.text}
-                <span className='chat_timestamp'> {val.timestamp}</span></p>
-		
-		
+                <span className='chat_name'> {val.name} </span>
+			{val.type === "image" ?
+<img src={`${base_url}/${val.photo}`} style={{ height:'auto',width:'80%'}} />:
+				<span>{val.text}</span>}
+                <span className='chat_timestamp'> {val.timestamp}</span></p>	
                 </>}
-
 				</>
 			)
 		})}
@@ -437,7 +496,7 @@ function Chat(){
 		onChange={ (e)=>{ setReply(e.target.value) }} />
 		<SendIcon onClick={sendMessage} />
 		</form>
-		<PhotoCameraIcon />
+		<PhotoCameraIcon onClick={()=>{ setPhotoModal(true) }} />
 		<MicIcon />
 		</div>
 
