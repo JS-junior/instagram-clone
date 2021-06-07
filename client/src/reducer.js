@@ -1,13 +1,15 @@
 export const initState = {
-	theme: localStorage.getItem('theme'),
 	base_url: 'http://localhost:8080',
 	token: localStorage.getItem('jwt'),
-	username: ""
+	myScreen: null,
+	userScreen: null 
 }
 
 export const actionTypes = {
 	CHANGE_THEME: 'It changes the theme in the entire app' ,
-	SET_USERNAME: 'It sets the username'
+	SET_USERNAME: 'It sets the username',
+	GO_LIVE: 'instagram live',
+	live_initiator: false
 }
 
 export const reducer = (state, action)=>{
@@ -21,6 +23,13 @@ export const reducer = (state, action)=>{
 			return{
 				...state,
 				username: action.username
+			};
+		case actionTypes.GO_LIVE:
+			return{
+				...state,
+				myScreen: action.myScreen,
+				userScreen: action.myScreen,
+				live_initiator: true
 			};
 		default:
 			return state

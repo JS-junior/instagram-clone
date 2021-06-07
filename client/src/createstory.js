@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
 import './App.css'
 import { State } from './state.js'
+import { actionTypes } from './reducer.js'
 import { ToastContainer, toast } from 'react-toastify'
 
 function CreateStory(){
@@ -64,6 +65,21 @@ function CreateStory(){
 			})
 	}
 
+
+	const GoLive = ()=>{
+
+		dispatch({
+			type: actionTypes.GO_LIVE,
+			live_initiator: true,
+			myScreen: 'hello',
+			userScreen: 'hi'
+		})
+
+		history.push('/video/hnnssnsn')
+
+	}
+
+
 	return(
 		<>
 
@@ -80,7 +96,8 @@ function CreateStory(){
 		</center>
 		</CardContent>                                                                                  </CardActionArea>                                                                               </Card><br />
 		<center><Button onClick={post} variant='contained'> upload </Button></center>
-
+		<br />
+		<Button onClick={GoLive}> Go live </Button>
 		</>
 	)
 }
