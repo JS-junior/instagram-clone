@@ -1,12 +1,12 @@
 
-# Project Titlewe
+# Instagram Clone
 
-A brief description of what this project does and who it's for
+This is the Full stack Instagram clone, made with MERN stack. Thi clone app has almost all the functionalities that any social media app could have. 
 
-hi
-## Demo
 
-Insert gif or link to demo
+## See in action
+
+Talk is cheap, See this Clone in live 🔥
 
   
 ## Screenshots
@@ -14,38 +14,58 @@ Insert gif or link to demo
 ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
   
-## Lessons Learned
+## 
 
-What did you learn while building this project? What challenges did you face and how did you overcome them?
+
 
   
-## Tech Stack
+## MERN 
 
-**Client:** React, Redux, TailwindCSS
+**Client:** React
 
-**Server:** Node, Express
+**Server:**
+- Node.js, 
+- Express, 
+- MongoDB, 
+- socket.io 
+
+**deployment:** 
+- **Frontend:** firebase, 
+- **Backend:** heroku
+
 
   
 ## Features
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
+- Follow / unfollow
+- Live previews of images before posting
+- Tag users in post
+- Like, comment, share in posts
+- Get posts of your followings in home page
+- search users
+- upload stories
+- create chat rooms 
+- add users and remove users in chat room
+- share images, delete messages and see online users in chat room
+- Get notifications, example- someone tagged you in his/her post
+- user presence system, check whether user is online or not
+- Forgot password
+- Edit profile page
+- Install as a native mobile app (PWA)
 
-  
+
 ## Run Locally
 
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd whatsapp-clone
 ```
 
 Install dependencies
@@ -57,17 +77,18 @@ Install dependencies
 Start the server
 
 ```bash
-  npm run start
+  node server
 ```
 
   
 ## Support
 
-For support, email fake@fake.com or join our Slack channel.
+If You have any sort of queries, just mail me at arnabgogoi83@gmail.com,
+or just DM me in Instagram https://instagram.com/little_champ.Jr
 
   
-## Feedback
 
-If you have any feedback, please reach out to us at fake@fake.com
+
+
 
   
