@@ -57,7 +57,7 @@ Talk is cheap, See this Clone in live 🔥
 Clone the project
 
 ```bash
-  git clone https://
+  git clone https://github.com/JS-junior/whatsapp-clone
 ```
 
 Go to the project directory
