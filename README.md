@@ -7,6 +7,7 @@ This is the Full stack Instagram clone, made with MERN stack. Thi clone app has 
 ## See in action
 
 Talk is cheap, See this Clone in live 🔥
+https://instagram-clone-0000.web.app
 
 
 ![](https://firebasestorage.googleapis.com/v0/b/instagram-clone-0000.appspot.com/o/IMG_20210609_140257.jpg?alt=media&token=8d959bad-34dd-4f8f-b6c7-a6c0080a0764)
