@@ -58,13 +58,13 @@ https://instagram-clone-0000.web.app
 Clone the project
 
 ```bash
-  git clone https://github.com/JS-junior/whatsapp-clone
+  git clone https://github.com/JS-junior/instagram-clone
 ```
 
 Go to the project directory
 
 ```bash
-  cd whatsapp-clone
+  cd instagram-clone
 ```
 
 Install dependencies
@@ -83,7 +83,7 @@ Start the server
 ## Support
 
 If You have any sort of queries, just mail me at arnabgogoi83@gmail.com,
-or just DM me in Instagram https://instagram.com/little_champ.Jr
+
 
   
 
